@@ -74,7 +74,11 @@ function startMusic(){
 
 // Random moving NO button (bounces on edges) const noBtn = document.getElementById('q5_no'); let x=100, y=100, vx=2, vy=2; function moveNo(){ const w = window.innerWidth - 80; const h = window.innerHeight - 40; x += vx; y += vy; if(x<=0 || x>=w) vx*=-1; if(y<=0 || y>=h) vy*=-1; noBtn.style.transform = translate(${x}px, ${y}px); requestAnimationFrame(moveNo); } moveNo();
 
-// Yes expands like a cake then goes to Q6 function cakeExpand(){ const b = document.getElementById('q5_yes'); b.style.transition = 'all 1s'; b.style.width = '220px'; b.style.height = '120px'; b.style.borderRadius = '8px'; setTimeout(()=>{ document.getElementById('q5').classList.remove('active'); document.getElementById('q6').classList.add('active'); },1200); }
+// Yes expands like a cake then goes to Q6 function cakeExpand(){ const b = document.getElementById('q5_yes'); // stop the moving NO button so it doesn't block clicks noBtn.style.display = 'none';
+
+b.style.transition = 'all 1s'; b.style.width = '220px'; b.style.height = '120px'; b.style.borderRadius = '8px';
+
+// force move to next question setTimeout(()=>{ document.getElementById('q5').classList.remove('active'); document.getElementById('q6').classList.add('active'); },1000); }
 
 // Fireworks for 5 seconds then show final function startFireworks(){ document.getElementById('q6').classList.remove('active'); const fw = document.getElementById('fireworks'); fw.style.display='block'; const start = Date.now(); function pop(){ if(Date.now()-start > 5000){ fw.style.display='none'; showFinal(); return; } for(let i=0;i<20;i++){ const d=document.createElement('div'); d.className='fire'; d.style.left=Math.random()*100+'%'; d.style.top=Math.random()*100+'%'; fw.appendChild(d); setTimeout(()=>d.remove(),600); } setTimeout(pop,300); } pop(); }
 
