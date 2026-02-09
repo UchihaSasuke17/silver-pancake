@@ -3,491 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthday Surprise Quiz!</title>
+    <title>Birthday Surprise for Tanu!</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 500px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 25px;
-            box-shadow: 
-                0 15px 35px rgba(0, 0, 0, 0.5),
-                0 0 50px rgba(128, 0, 255, 0.3),
-                inset 0 0 20px rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-            position: relative;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(15px);
-            padding: 10px;
-        }
-        
-        .inner-container {
-            background: linear-gradient(to bottom, rgba(30, 30, 60, 0.9), rgba(10, 10, 30, 0.9));
-            border-radius: 20px;
-            padding: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .url-bar {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
-            padding: 12px 20px;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
-        }
-        
-        .lock-icon {
-            color: #4CAF50;
-            margin-right: 10px;
-            font-size: 14px;
-        }
-        
-        .url-text {
-            color: #88c0ff;
-            font-size: 14px;
-            letter-spacing: 0.5px;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #ff7ee6, #a07cff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 20px rgba(160, 124, 255, 0.5);
-            letter-spacing: 1px;
-        }
-        
-        .header p {
-            color: #d0d0ff;
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        
-        /* SCREENS - PAGE BY PAGE */
-        .screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            padding: 0 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-        }
-        
-        .screen.active {
-            opacity: 1;
-            pointer-events: all;
-            position: relative;
-        }
-        
-        .question-number {
-            color: #a07cff;
-            font-size: 1rem;
-            margin-bottom: 15px;
-            font-weight: 600;
-            text-align: center;
-            letter-spacing: 1px;
-        }
-        
-        .question-text {
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            color: #ffffff;
-            line-height: 1.4;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-        }
-        
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .option {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(160, 124, 255, 0.3);
-            border-radius: 15px;
-            padding: 18px;
-            font-size: 1.3rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            color: #ffffff;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .option:hover {
-            background: rgba(160, 124, 255, 0.2);
-            border-color: #a07cff;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .option.moon-selected {
-            background: linear-gradient(135deg, rgba(160, 124, 255, 0.3), rgba(255, 126, 230, 0.3));
-            border-color: #ff7ee6;
-            box-shadow: 
-                0 0 30px rgba(255, 126, 230, 0.5),
-                inset 0 0 20px rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-        }
-        
-        .moon-dust {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            z-index: 2;
-        }
-        
-        .progress-container {
-            margin-top: 20px;
-        }
-        
-        .progress-text {
-            color: #d0d0ff;
-            text-align: center;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .progress {
-            height: 100%;
-            background: linear-gradient(to right, #ff7ee6, #a07cff);
-            width: 0%;
-            transition: width 0.5s ease;
-            box-shadow: 0 0 10px rgba(255, 126, 230, 0.7);
-        }
-        
-        /* BOUNCING NO */
-        .bouncing-no-container {
-            position: relative;
-            height: 200px;
-            margin: 20px 0;
-            border-radius: 15px;
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px dashed rgba(255, 255, 255, 0.1);
-        }
-        
-        .bouncing-no {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, #ff4757, #ff6b6b);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 
-                0 0 30px rgba(255, 107, 107, 0.7),
-                inset 0 0 20px rgba(255, 255, 255, 0.2);
-            z-index: 5;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .static-yes {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #2ed573, #1dd1a1);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 
-                0 0 30px rgba(29, 209, 161, 0.7),
-                inset 0 0 20px rgba(255, 255, 255, 0.2);
-            margin: 30px auto;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.5s ease;
-        }
-        
-        .two-options {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            margin: 30px 0;
-        }
-        
-        .single-yes {
-            width: 150px;
-            height: 150px;
-            background: linear-gradient(135deg, #ff9f43, #ffcc00);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #333;
-            font-weight: bold;
-            font-size: 2rem;
-            cursor: pointer;
-            box-shadow: 
-                0 0 40px rgba(255, 159, 67, 0.8),
-                0 0 60px rgba(255, 204, 0, 0.5);
-            margin: 40px auto;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-            border: 4px solid rgba(255, 255, 255, 0.4);
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        /* BIRTHDAY SCREEN */
-        .birthday-screen {
-            text-align: center;
-        }
-        
-        .cake {
-            position: relative;
-            width: 250px;
-            height: 180px;
-            margin: 30px auto;
-        }
-        
-        .layer {
-            position: absolute;
-            border-radius: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            animation: fadeInUp 1s forwards;
-        }
-        
-        .layer-1 {
-            width: 200px;
-            height: 40px;
-            background: linear-gradient(to right, #8B4513, #D2691E);
-            bottom: 0;
-            animation-delay: 0.5s;
-        }
-        
-        .layer-2 {
-            width: 180px;
-            height: 40px;
-            background: linear-gradient(to right, #A0522D, #CD853F);
-            bottom: 40px;
-            animation-delay: 1.5s;
-        }
-        
-        .layer-3 {
-            width: 160px;
-            height: 30px;
-            background: linear-gradient(to right, #D2691E, #F4A460);
-            bottom: 80px;
-            animation-delay: 2.5s;
-        }
-        
-        .candle {
-            position: absolute;
-            width: 8px;
-            height: 40px;
-            background: linear-gradient(to bottom, #FFD700, #FFA500);
-            border-radius: 4px;
-            bottom: 110px;
-            opacity: 0;
-            animation: candleAppear 0.5s forwards;
-        }
-        
-        .candle:nth-child(1) { left: 30%; animation-delay: 3.5s; }
-        .candle:nth-child(2) { left: 45%; animation-delay: 4s; }
-        .candle:nth-child(3) { left: 60%; animation-delay: 4.5s; }
-        
-        .flame {
-            position: absolute;
-            width: 15px;
-            height: 25px;
-            background: radial-gradient(#FFD700, #FF4500);
-            border-radius: 50% 50% 20% 20%;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            animation: flameAppear 0.5s forwards, flameFlicker 0.3s infinite alternate;
-        }
-        
-        .birthday-text {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin: 30px 0;
-            color: transparent;
-            background: linear-gradient(to right, #ff7ee6, #a07cff, #7ee5ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            overflow: hidden;
-            height: 60px;
-        }
-        
-        .letter {
-            display: inline-block;
-            opacity: 0;
-            transform: translateX(30px);
-            animation: slideIn 0.5s forwards;
-        }
-        
-        /* Animations */
-        @keyframes fadeInUp {
-            from { 
-                opacity: 0;
-                transform: translateX(-50%) translateY(30px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        
-        @keyframes candleAppear {
-            from { 
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes flameAppear {
-            from { 
-                opacity: 0;
-                transform: translateX(-50%) scale(0.5);
-            }
-            to { 
-                opacity: 1;
-                transform: translateX(-50%) scale(1);
-            }
-        }
-        
-        @keyframes flameFlicker {
-            from { transform: translateX(-50%) scale(1); }
-            to { transform: translateX(-50%) scale(1.1); }
-        }
-        
-        @keyframes slideIn {
-            from { 
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        /* Timer */
-        .timer-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 15px;
-            border-radius: 10px;
-            display: none;
-            z-index: 1000;
-        }
-        
-        .timer-text {
-            color: #ffcc00;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                max-width: 95%;
-            }
-            
-            .question-text {
-                font-size: 1.5rem;
-            }
-            
-            .option {
-                padding: 15px;
-                font-size: 1.2rem;
-            }
-            
-            .two-options {
-                flex-direction: column;
-                gap: 20px;
-                align-items: center;
-            }
-            
-            .bouncing-no, .static-yes {
-                width: 80px;
-                height: 80px;
-                font-size: 1.2rem;
-            }
-            
-            .single-yes {
-                width: 120px;
-                height: 120px;
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
@@ -495,7 +13,7 @@
             <!-- URL Bar -->
             <div class="url-bar">
                 <i class="fas fa-lock lock-icon"></i>
-                <span class="url-text">uchihasasuke17.github.io/silver</span>
+                <span class="url-text">uchihasasuke17.github.io/HappyBirthday-Tanu</span>
             </div>
             
             <!-- Header -->
@@ -506,7 +24,7 @@
             
             <!-- Screen 1: Question 1 -->
             <div id="screen-1" class="screen active">
-                <div class="question-number">Question 1 of 7</div>
+                <div class="question-number">Question 1 of 6</div>
                 <h2 class="question-text">Your name!!</h2>
                 <div class="options-container">
                     <div class="option moon-option" data-option="Tanu">Tanu</div>
@@ -515,14 +33,14 @@
                 <div class="progress-container">
                     <div class="progress-text">Progress</div>
                     <div class="progress-bar">
-                        <div class="progress" style="width: 14%"></div>
+                        <div class="progress" style="width: 16.6%"></div>
                     </div>
                 </div>
             </div>
             
             <!-- Screen 2: Question 2 -->
             <div id="screen-2" class="screen">
-                <div class="question-number">Question 2 of 7</div>
+                <div class="question-number">Question 2 of 6</div>
                 <h2 class="question-text">The year you are born?</h2>
                 <div class="options-container">
                     <div class="option moon-option" data-option="2008">2008</div>
@@ -532,14 +50,14 @@
                 <div class="progress-container">
                     <div class="progress-text">Progress</div>
                     <div class="progress-bar">
-                        <div class="progress" style="width: 28%"></div>
+                        <div class="progress" style="width: 33.2%"></div>
                     </div>
                 </div>
             </div>
             
             <!-- Screen 3: Question 3 -->
             <div id="screen-3" class="screen">
-                <div class="question-number">Question 3 of 7</div>
+                <div class="question-number">Question 3 of 6</div>
                 <h2 class="question-text">Choose a number</h2>
                 <div class="options-container">
                     <div class="option moon-option" data-option="07">07</div>
@@ -549,14 +67,14 @@
                 <div class="progress-container">
                     <div class="progress-text">Progress</div>
                     <div class="progress-bar">
-                        <div class="progress" style="width: 42%"></div>
+                        <div class="progress" style="width: 49.8%"></div>
                     </div>
                 </div>
             </div>
             
             <!-- Screen 4: Question 4 -->
             <div id="screen-4" class="screen">
-                <div class="question-number">Question 4 of 7</div>
+                <div class="question-number">Question 4 of 6</div>
                 <h2 class="question-text">What do you love the most?</h2>
                 <div class="options-container">
                     <div class="option moon-option" data-option="Beach">Beach</div>
@@ -566,14 +84,14 @@
                 <div class="progress-container">
                     <div class="progress-text">Progress</div>
                     <div class="progress-bar">
-                        <div class="progress" style="width: 56%"></div>
+                        <div class="progress" style="width: 66.4%"></div>
                     </div>
                 </div>
             </div>
             
             <!-- Screen 5: Question 5 -->
             <div id="screen-5" class="screen">
-                <div class="question-number">Question 5 of 7</div>
+                <div class="question-number">Question 5 of 6</div>
                 <h2 class="question-text">What's your dream vacation spot?</h2>
                 <div class="options-container">
                     <div class="option moon-option" data-option="Beach">Beach</div>
@@ -583,35 +101,17 @@
                 <div class="progress-container">
                     <div class="progress-text">Progress</div>
                     <div class="progress-bar">
-                        <div class="progress" style="width: 70%"></div>
+                        <div class="progress" style="width: 83%"></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Screen 6: Question 6 (BOUNCING NO) -->
+            <!-- Screen 6: Final Question -->
             <div id="screen-6" class="screen">
-                <div class="question-number">Question 6 of 7</div>
-                <h2 class="question-text">Are you my best friend?</h2>
-                <div class="two-options">
-                    <div class="bouncing-no-container">
-                        <div id="bouncing-no" class="bouncing-no">No</div>
-                    </div>
-                    <div id="static-yes" class="static-yes">Yes</div>
-                </div>
-                <div class="progress-container">
-                    <div class="progress-text">Progress</div>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: 85%"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Screen 7: Question 7 (Single YES) -->
-            <div id="screen-7" class="screen">
-                <div class="question-number">Question 7 of 7</div>
+                <div class="question-number">Question 6 of 6</div>
                 <h2 class="question-text">Are you ready for your birthday presentation?</h2>
                 <div id="single-yes" class="single-yes">Yes!</div>
-                 <div class="progress-container">
+                <div class="progress-container">
                     <div class="progress-text">Progress</div>
                     <div class="progress-bar">
                         <div class="progress" style="width: 100%"></div>
@@ -623,18 +123,22 @@
             <div id="birthday-screen" class="screen">
                 <div class="birthday-screen">
                     <h2 class="question-text">🎂 Happy Birthday! 🎂</h2>
-                    <div class="cake">
-                        <div class="layer layer-1"></div>
-                        <div class="layer layer-2"></div>
-                        <div class="layer layer-3"></div>
-                        <div class="candle">
-                            <div class="flame"></div>
-                        </div>
-                        <div class="candle">
-                            <div class="flame"></div>
-                        </div>
-                        <div class="candle">
-                            <div class="flame"></div>
+                    <div class="cake-container">
+                        <div class="cake">
+                            <div class="cake-layer cake-base"></div>
+                            <div class="cake-layer cake-middle-layer"></div>
+                            <div class="cake-layer cake-top-layer"></div>
+                            <div class="cake-layer cake-frosting"></div>
+                            
+                            <div class="candle candle-1">
+                                <div class="flame"></div>
+                            </div>
+                            <div class="candle candle-2">
+                                <div class="flame"></div>
+                            </div>
+                            <div class="candle candle-3">
+                                <div class="flame"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="birthday-text" id="birthday-text"></div>
@@ -650,242 +154,6 @@
         <div class="timer-text">Starting in: <span id="timer-count">5</span></div>
     </div>
 
-    <script>
-                let currentScreen = 1;
-        let velocityX = 3, velocityY = 2;
-        let bounceInterval;
-        
-        // Play Happy Birthday tune
-        function playBirthdaySound() {
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                
-                // "Happy Birthday" melody
-                const notes = [523.25, 523.25, 587.33, 523.25, 698.46, 659.25, 523.25];
-                
-                let time = audioContext.currentTime;
-                
-                for (let i = 0; i < notes.length; i++) {
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.frequency.setValueAtTime(notes[i], time + i * 0.3);
-                    oscillator.type = 'sine';
-                    
-                    gainNode.gain.setValueAtTime(0.2, time + i * 0.3);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, time + i * 0.3 + 0.25);
-                    
-                    oscillator.start(time + i * 0.3);
-                    oscillator.stop(time + i * 0.3 + 0.25);
-                }
-            } catch (e) {
-                console.log("Audio not supported");
-            }
-        }
-        
-        // Create moon dust
-        function createMoonDust(element) {
-            for (let i = 0; i < 20; i++) {
-                const dust = document.createElement('div');
-                dust.className = 'moon-dust';
-                
-                const rect = element.getBoundingClientRect();
-                const x = Math.random() * rect.width;
-                const y = Math.random() * rect.height;
-                
-                dust.style.left = `${x}px`;
-                dust.style.top = `${y}px`;
-                
-                const size = Math.random() * 6 + 3;
-                dust.style.width = `${size}px`;
-                dust.style.height = `${size}px`;
-                
-                element.appendChild(dust);
-                
-                const colors = ['#ffffff', '#a07cff', '#ff7ee6', '#7ee5ff'];
-                dust.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                dust.style.boxShadow = `0 0 ${size}px ${dust.style.backgroundColor}`;
-                
-                const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 60 + 30;
-                
-                dust.animate([
-                    { opacity: 0.9, transform: 'translate(0, 0) scale(1)' },
-                    { opacity: 0, transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0.1)` }
-                ], {
-                    duration: Math.random() * 800 + 500,
-                    easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
-                });
-                
-                setTimeout(() => {
-                    if (dust.parentNode) dust.parentNode.removeChild(dust);
-                }, 1300);
-            }
-        }
-        
-        // Show specific screen
-        function showScreen(screenNum) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            
-            const screenId = screenNum === 'birthday' ? 'birthday-screen' : `screen-${screenNum}`;
-            document.getElementById(screenId).classList.add('active');
-            
-            if (screenNum === 6) {
-                setTimeout(startBouncingNo, 100);
-            }
-            
-            if (screenNum === 'birthday') {
-                startBirthdayAnimation();
-            }
-        }
-        
-        // Start bouncing NO
-        function startBouncingNo() {
-            const bouncingNo = document.getElementById('bouncing-no');
-            const container = document.querySelector('.bouncing-no-container');
-            
-            let posX = Math.random() * (container.clientWidth - 100);
-            let posY = Math.random() * (container.clientHeight - 100);
-            
-            bouncingNo.style.left = `${posX}px`;
-            bouncingNo.style.top = `${posY}px`;
-            
-            clearInterval(bounceInterval);
-            
-            bounceInterval = setInterval(() => {
-                const rect = bouncingNo.getBoundingClientRect();
-                const containerRect = container.getBoundingClientRect();
-                
-                if (rect.left <= containerRect.left || rect.right >= containerRect.right) {
-                    velocityX = -velocityX;
-                    bouncingNo.style.transform = 'scale(0.9)';
-                    setTimeout(() => bouncingNo.style.transform = 'scale(1)', 100);
-                }
-                
-                if (rect.top <= containerRect.top || rect.bottom >= containerRect.bottom) {
-                    velocityY = -velocityY;
-                    bouncingNo.style.transform = 'scale(0.9)';
-                    setTimeout(() => bouncingNo.style.transform = 'scale(1)', 100);
-                }
-                
-                posX += velocityX;
-                posY += velocityY;
-                
-                bouncingNo.style.left = `${posX}px`;
-                bouncingNo.style.top = `${posY}px`;
-                
-                if (Math.random() < 0.02) {
-                    velocityX += (Math.random() - 0.5) * 0.5;
-                    velocityY += (Math.random() - 0.5) * 0.5;
-                }
-                
-            }, 16);
-        }
-        
-        // Setup regular questions (1-5)
-        function setupRegularQuestions() {
-            document.querySelectorAll('#screen-1 .moon-option, #screen-2 .moon-option, #screen-3 .moon-option, #screen-4 .moon-option, #screen-5 .moon-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    if (this.classList.contains('selected')) return;
-                    
-                    playBirthdaySound();
-                    createMoonDust(this);
-                    this.classList.add('selected');
-                    
-                    const screenId = this.closest('.screen').id;
-                    const screenNum = parseInt(screenId.split('-')[1]);
-                    
-                    setTimeout(() => {
-                        if (screenNum < 5) {
-                            showScreen(screenNum + 1);
-                        } else {
-                            showScreen(6);
-                        }
-                    }, 1000);
-                });
-            });
-        }
-        
-        // Setup question 6
-        function setupQuestion6() {
-            const staticYes = document.getElementById('static-yes');
-            const bouncingNo = document.getElementById('bouncing-no');
-            
-            staticYes.addEventListener('click', function() {
-                playBirthdaySound();
-                createMoonDust(this);
-                this.style.transform = 'scale(1.2)';
-                
-                setTimeout(() => {
-                    showScreen(7);
-                }, 1000);
-            });
-            
-            bouncingNo.addEventListener('click', function() {
-                playBirthdaySound();
-                createMoonDust(this);
-                
-                velocityX = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 4 + 3);
-                velocityY = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 4 + 3);
-                
-                this.style.transform = 'scale(0.8) rotate(10deg)';
-                setTimeout(() => this.style.transform = 'scale(1) rotate(0deg)', 300);
-            });
-        }
-        
-        // Setup question 7
-        function setupQuestion7() {
-            const singleYes = document.getElementById('single-yes');
-            
-            singleYes.addEventListener('click', function() {
-                playBirthdaySound();
-                createMoonDust(this);
-                
-                document.getElementById('timer-container').style.display = 'block';
-                let count = 5;
-                const timer = setInterval(() => {
-                    document.getElementById('timer-count').textContent = count;
-                    count--;
-                    
-                    if (count < 0) {
-                        clearInterval(timer);
-                        document.getElementById('timer-container').style.display = 'none';
-                        showScreen('birthday');
-                    }
-                }, 1000);
-            });
-        }
-        
-        // Birthday animation
-        function startBirthdayAnimation() {
-            playBirthdaySound();
-            
-            const text = "Happy Birthday!";
-            const textDiv = document.getElementById('birthday-text');
-            textDiv.innerHTML = '';
-            
-            for (let i = 0; i < text.length; i++) {
-                const letter = document.createElement('span');
-                letter.className = 'letter';
-                letter.textContent = text[i];
-                letter.style.animationDelay = `${i * 0.1}s`;
-                textDiv.appendChild(letter);
-            }
-            
-            setTimeout(() => playBirthdaySound(), 3000);
-        }
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            setupRegularQuestions();
-            setupQuestion6();
-            setupQuestion7();
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
