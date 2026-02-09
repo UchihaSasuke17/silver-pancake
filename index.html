@@ -93,6 +93,28 @@
             opacity: 0.9;
         }
         
+        /* SCREENS - PAGE BY PAGE */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        
+        .screen.active {
+            opacity: 1;
+            pointer-events: all;
+            position: relative;
+        }
+        
         .question-number {
             color: #a07cff;
             font-size: 1rem;
@@ -186,7 +208,7 @@
             box-shadow: 0 0 10px rgba(255, 126, 230, 0.7);
         }
         
-        /* Bouncing NO container */
+        /* BOUNCING NO */
         .bouncing-no-container {
             position: relative;
             height: 200px;
@@ -239,14 +261,11 @@
             transition: all 0.5s ease;
         }
         
-        .static-yes.expanded {
-            animation: expandYes 1s forwards;
-        }
-        
-        @keyframes expandYes {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1.2); background: linear-gradient(135deg, #ff9f43, #ffcc00); }
+        .two-options {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 30px 0;
         }
         
         .single-yes {
@@ -275,20 +294,7 @@
             50% { transform: scale(1.1); }
         }
         
-        .single-yes:hover {
-            animation: none;
-            transform: scale(1.15);
-        }
-        
-        /* For two-option layout */
-        .two-options {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            margin: 30px 0;
-        }
-        
-        /* Final birthday screen */
+        /* BIRTHDAY SCREEN */
         .birthday-screen {
             text-align: center;
         }
@@ -341,7 +347,7 @@
             border-radius: 4px;
             bottom: 110px;
             opacity: 0;
-            animation: fadeIn 0.5s forwards;
+            animation: candleAppear 0.5s forwards;
         }
         
         .candle:nth-child(1) { left: 30%; animation-delay: 3.5s; }
@@ -381,11 +387,6 @@
         }
         
         /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
         @keyframes fadeInUp {
             from { 
                 opacity: 0;
@@ -394,6 +395,17 @@
             to { 
                 opacity: 1;
                 transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        @keyframes candleAppear {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
             }
         }
         
@@ -424,7 +436,7 @@
             }
         }
         
-        /* Timer for fireworks */
+        /* Timer */
         .timer-container {
             position: fixed;
             top: 20px;
@@ -443,7 +455,6 @@
             text-align: center;
         }
         
-        /* Responsive */
         @media (max-width: 600px) {
             .container {
                 max-width: 95%;
@@ -464,15 +475,10 @@
                 align-items: center;
             }
             
-            .bouncing-no {
+            .bouncing-no, .static-yes {
                 width: 80px;
                 height: 80px;
                 font-size: 1.2rem;
-            }
-            
-            .static-yes {
-                width: 100px;
-                height: 100px;
             }
             
             .single-yes {
@@ -605,65 +611,57 @@
                 <div class="question-number">Question 7 of 7</div>
                 <h2 class="question-text">Are you ready for your birthday presentation?</h2>
                 <div id="single-yes" class="single-yes">Yes!</div>
-                <div class="progress-container">
+                 <div class="progress-container">
                     <div class="progress-text">Progress</div>
-               // Current question tracker
-        let currentQuestion = 1;
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Final Birthday Screen -->
+            <div id="birthday-screen" class="screen">
+                <div class="birthday-screen">
+                    <h2 class="question-text">🎂 Happy Birthday! 🎂</h2>
+                    <div class="cake">
+                        <div class="layer layer-1"></div>
+                        <div class="layer layer-2"></div>
+                        <div class="layer layer-3"></div>
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                    </div>
+                    <div class="birthday-text" id="birthday-text"></div>
+                    <p style="color: #d0d0ff; font-size: 1.2rem; margin-top: 20px;">
+                        Wishing you the happiest birthday! May all your dreams come true! 🎉✨
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="timer-container" class="timer-container">
+        <div class="timer-text">Starting in: <span id="timer-count">5</span></div>
+    </div>
+
+    <script>
+                let currentScreen = 1;
         let velocityX = 3, velocityY = 2;
-        let bouncingInterval;
+        let bounceInterval;
         
-        // Create moon dust particles
-        function createMoonDust(option) {
-            for (let i = 0; i < 20; i++) {
-                const dust = document.createElement('div');
-                dust.className = 'moon-dust';
-                
-                const rect = option.getBoundingClientRect();
-                const x = Math.random() * rect.width;
-                const y = Math.random() * rect.height;
-                
-                dust.style.left = `${x}px`;
-                dust.style.top = `${y}px`;
-                
-                const size = Math.random() * 6 + 3;
-                dust.style.width = `${size}px`;
-                dust.style.height = `${size}px`;
-                
-                option.appendChild(dust);
-                
-                // Random color
-                const colors = ['#ffffff', '#a07cff', '#ff7ee6', '#7ee5ff'];
-                dust.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                dust.style.boxShadow = `0 0 ${size}px ${dust.style.backgroundColor}`;
-                
-                // Animate
-                const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 60 + 30;
-                
-                dust.animate([
-                    { opacity: 0.9, transform: 'translate(0, 0) scale(1)' },
-                    { opacity: 0, transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0.1)` }
-                ], {
-                    duration: Math.random() * 800 + 500,
-                    easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
-                });
-                
-                setTimeout(() => {
-                    if (dust.parentNode) dust.parentNode.removeChild(dust);
-                }, 1300);
-            }
-        }
-        
-        // Play Happy Birthday tune (ORIGINAL MUSIC)
+        // Play Happy Birthday tune
         function playBirthdaySound() {
             try {
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 
-                // "Happy Birthday" melody notes
-                const notes = [
-                    523.25, 523.25, 587.33, 523.25, 698.46, 659.25,
-                    523.25, 523.25, 587.33, 523.25, 783.99, 698.46
-                ];
+                // "Happy Birthday" melody
+                const notes = [523.25, 523.25, 587.33, 523.25, 698.46, 659.25, 523.25];
                 
                 let time = audioContext.currentTime;
                 
@@ -688,35 +686,88 @@
             }
         }
         
+        // Create moon dust
+        function createMoonDust(element) {
+            for (let i = 0; i < 20; i++) {
+                const dust = document.createElement('div');
+                dust.className = 'moon-dust';
+                
+                const rect = element.getBoundingClientRect();
+                const x = Math.random() * rect.width;
+                const y = Math.random() * rect.height;
+                
+                dust.style.left = `${x}px`;
+                dust.style.top = `${y}px`;
+                
+                const size = Math.random() * 6 + 3;
+                dust.style.width = `${size}px`;
+                dust.style.height = `${size}px`;
+                
+                element.appendChild(dust);
+                
+                const colors = ['#ffffff', '#a07cff', '#ff7ee6', '#7ee5ff'];
+                dust.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                dust.style.boxShadow = `0 0 ${size}px ${dust.style.backgroundColor}`;
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 60 + 30;
+                
+                dust.animate([
+                    { opacity: 0.9, transform: 'translate(0, 0) scale(1)' },
+                    { opacity: 0, transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0.1)` }
+                ], {
+                    duration: Math.random() * 800 + 500,
+                    easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
+                });
+                
+                setTimeout(() => {
+                    if (dust.parentNode) dust.parentNode.removeChild(dust);
+                }, 1300);
+            }
+        }
+        
+        // Show specific screen
+        function showScreen(screenNum) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            const screenId = screenNum === 'birthday' ? 'birthday-screen' : `screen-${screenNum}`;
+            document.getElementById(screenId).classList.add('active');
+            
+            if (screenNum === 6) {
+                setTimeout(startBouncingNo, 100);
+            }
+            
+            if (screenNum === 'birthday') {
+                startBirthdayAnimation();
+            }
+        }
+        
         // Start bouncing NO
         function startBouncingNo() {
             const bouncingNo = document.getElementById('bouncing-no');
-            if (!bouncingNo) return;
-            
             const container = document.querySelector('.bouncing-no-container');
-            const containerRect = container.getBoundingClientRect();
             
-            // Random starting position
-            let posX = Math.random() * (containerRect.width - 100);
-            let posY = Math.random() * (containerRect.height - 100);
+            let posX = Math.random() * (container.clientWidth - 100);
+            let posY = Math.random() * (container.clientHeight - 100);
             
             bouncingNo.style.left = `${posX}px`;
             bouncingNo.style.top = `${posY}px`;
             
-            clearInterval(bouncingInterval);
+            clearInterval(bounceInterval);
             
-            bouncingInterval = setInterval(() => {
+            bounceInterval = setInterval(() => {
                 const rect = bouncingNo.getBoundingClientRect();
-                const containerCurrentRect = container.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
                 
-                // Bounce off edges
-                if (rect.left <= containerCurrentRect.left || rect.right >= containerCurrentRect.right) {
+                if (rect.left <= containerRect.left || rect.right >= containerRect.right) {
                     velocityX = -velocityX;
                     bouncingNo.style.transform = 'scale(0.9)';
                     setTimeout(() => bouncingNo.style.transform = 'scale(1)', 100);
                 }
                 
-                if (rect.top <= containerCurrentRect.top || rect.bottom >= containerCurrentRect.bottom) {
+                if (rect.top <= containerRect.top || rect.bottom >= containerRect.bottom) {
                     velocityY = -velocityY;
                     bouncingNo.style.transform = 'scale(0.9)';
                     setTimeout(() => bouncingNo.style.transform = 'scale(1)', 100);
@@ -728,7 +779,6 @@
                 bouncingNo.style.left = `${posX}px`;
                 bouncingNo.style.top = `${posY}px`;
                 
-                // Random direction changes
                 if (Math.random() < 0.02) {
                     velocityX += (Math.random() - 0.5) * 0.5;
                     velocityY += (Math.random() - 0.5) * 0.5;
@@ -737,26 +787,31 @@
             }, 16);
         }
         
-        // Switch screens
-        function showScreen(screenNumber) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
+        // Setup regular questions (1-5)
+        function setupRegularQuestions() {
+            document.querySelectorAll('#screen-1 .moon-option, #screen-2 .moon-option, #screen-3 .moon-option, #screen-4 .moon-option, #screen-5 .moon-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    if (this.classList.contains('selected')) return;
+                    
+                    playBirthdaySound();
+                    createMoonDust(this);
+                    this.classList.add('selected');
+                    
+                    const screenId = this.closest('.screen').id;
+                    const screenNum = parseInt(screenId.split('-')[1]);
+                    
+                    setTimeout(() => {
+                        if (screenNum < 5) {
+                            showScreen(screenNum + 1);
+                        } else {
+                            showScreen(6);
+                        }
+                    }, 1000);
+                });
             });
-            
-            const screenId = screenNumber === 'birthday' ? 'birthday-screen' : `screen-${screenNumber}`;
-            document.getElementById(screenId).classList.add('active');
-            
-            // Special setups
-            if (screenNumber === 6) {
-                setTimeout(() => startBouncingNo(), 100);
-            }
-            
-            if (screenNumber === 'birthday') {
-                startBirthdayAnimation();
-            }
         }
         
-        // Setup question 6 (bouncing NO)
+        // Setup question 6
         function setupQuestion6() {
             const staticYes = document.getElementById('static-yes');
             const bouncingNo = document.getElementById('bouncing-no');
@@ -764,9 +819,11 @@
             staticYes.addEventListener('click', function() {
                 playBirthdaySound();
                 createMoonDust(this);
-                this.classList.add('expanded');
+                this.style.transform = 'scale(1.2)';
                 
-                setTimeout(() => showScreen(7), 1500);
+                setTimeout(() => {
+                    showScreen(7);
+                }, 1000);
             });
             
             bouncingNo.addEventListener('click', function() {
@@ -781,7 +838,7 @@
             });
         }
         
-        // Setup question 7 (single YES)
+        // Setup question 7
         function setupQuestion7() {
             const singleYes = document.getElementById('single-yes');
             
@@ -789,7 +846,6 @@
                 playBirthdaySound();
                 createMoonDust(this);
                 
-                // Start timer for fireworks
                 document.getElementById('timer-container').style.display = 'block';
                 let count = 5;
                 const timer = setInterval(() => {
@@ -805,38 +861,10 @@
             });
         }
         
-        // Setup regular questions (1-5)
-        function setupRegularQuestions() {
-            document.querySelectorAll('.moon-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    if (this.classList.contains('selected')) return;
-                    
-                    playBirthdaySound();
-                    createMoonDust(this);
-                    this.classList.add('selected');
-                    
-                    const currentScreen = this.closest('.screen');
-                    const screenId = currentScreen.id;
-                    const questionNum = parseInt(screenId.split('-')[1]);
-                    
-                    setTimeout(() => {
-                        if (questionNum < 5) {
-                            showScreen(questionNum + 1);
-                            setTimeout(() => setupRegularQuestions(), 100);
-                        } else if (questionNum === 5) {
-                            showScreen(6);
-                            setTimeout(() => setupQuestion6(), 100);
-                        }
-                    }, 1000);
-                });
-            });
-        }
-        
         // Birthday animation
         function startBirthdayAnimation() {
             playBirthdaySound();
             
-            // Animate "Happy Birthday" text
             const text = "Happy Birthday!";
             const textDiv = document.getElementById('birthday-text');
             textDiv.innerHTML = '';
@@ -849,14 +877,15 @@
                 textDiv.appendChild(letter);
             }
             
-            // Play birthday song again
             setTimeout(() => playBirthdaySound(), 3000);
         }
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             setupRegularQuestions();
+            setupQuestion6();
+            setupQuestion7();
         });
     </script>
 </body>
-            </html>
+</html>
