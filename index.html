@@ -1,0 +1,84 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Birthday Surprise</title>
+<style>
+body{
+  margin:0; font-family:Arial, sans-serif; background:#0b1020; display:flex; justify-content:center; align-items:center; height:100vh; overflow:hidden;
+}
+#container{background:#0f1628; padding:20px; border-radius:16px; box-shadow:0 0 20px rgba(180,200,255,.2); width:90%; max-width:600px; text-align:center; color:white;}/* Moon-style buttons */ button{ position:relative; margin:10px; padding:12px 16px; border:none; border-radius:20px; background:radial-gradient(circle at 30% 30%, #f0f4ff, #c2d4ff, #9fb6ff); color:#0b1020; font-weight:bold; cursor:pointer; overflow:hidden; } button:before{ content:""; position:absolute; inset:0; background:radial-gradient(circle, rgba(240,244,255,.8) 10%, rgba(240,244,255,0) 60%); animation:dust 2s infinite; } @keyframes dust{ 0%{transform:translateX(-100%) translateY(0); opacity:.6;} 100%{transform:translateX(100%) translateY(-10px); opacity:0;} }
+
+.question{display:none;} .question.active{display:block;} #final{display:none;}
+
+/* Cake */ #cake{margin-top:20px;} .layer{width:220px; height:40px; background:#8b4513; margin:6px auto; border-radius:8px; display:none;} .candle{width:12px; height:45px; background:#ffeb3b; margin:4px auto; display:none;} .flame{width:12px; height:12px; background:orange; border-radius:50%; margin:2px auto; display:none;}
+
+/* Sliding text */ #hb{margin-top:20px; white-space:nowrap; overflow:hidden;} #hb span{ display:inline-block; font-size:26px; color:#c2d4ff; transform:translateX(100%); animation:slide 6s linear forwards; } @keyframes slide{to{transform:translateX(-100%);}}
+
+/* Moving NO button (Q5) */ #q5_no{position:absolute;}
+
+/* Fireworks */ #fireworks{position:fixed; inset:0; pointer-events:none; display:none;} .fire{position:absolute; width:6px; height:6px; background:white; border-radius:50%;} </style>
+
+</head>
+<body>
+<audio id="bgm" loop>
+  <source src="https://actions.google.com/sounds/v1/music/happy_birthday_to_you.ogg" type="audio/ogg">
+</audio>
+<div id="fireworks"></div>
+<div id="container">
+<h2>Answer these for a surprise 🌙</h2><div class="question active" id="q1">
+<p>1. What is my favourite colour?</p>
+<button onclick="startMusic(); go(2)">Pink</button>
+<button onclick="startMusic(); go(2)">Blue</button>
+<button onclick="startMusic(); go(2)">Black</button>
+</div><div class="question" id="q2">
+<p>2. Do I like chocolates?</p>
+<button onclick="go(3)">Yes</button>
+<button onclick="go(3)">No</button>
+<button onclick="go(3)">Maybe</button>
+</div><div class="question" id="q3">
+<p>3. Which is my favourite place?</p>
+<button onclick="go(4)">Beach</button>
+<button onclick="go(4)">Mountains</button>
+<button onclick="go(4)">Mall</button>
+</div><div class="question" id="q4">
+<p>4. Do I like surprises?</p>
+<button onclick="go(5)">Yes</button>
+<button onclick="go(5)">No</button>
+<button onclick="go(5)">Sometimes</button>
+</div><div class="question" id="q5">
+<p>5. Are you my best friend?</p>
+<button id="q5_yes" onclick="cakeExpand()">Yes</button>
+<button id="q5_no">No</button>
+</div><div class="question" id="q6">
+<p>6. Will you celebrate with me?</p>
+<button id="q6_yes" onclick="startFireworks()">Yes</button>
+</div><div id="final">
+<h2>🎂 Happy Birthday! 🎂</h2>
+<div id="cake">
+  <div class="layer" id="l1"></div>
+  <div class="layer" id="l2"></div>
+  <div class="layer" id="l3"></div>
+  <div class="candle" id="c1"></div>
+  <div class="flame" id="f1"></div>
+</div>
+<div id="hb"><span>HAPPY BIRTHDAY 🌙✨🎉</span></div>
+</div>
+</div>
+<script>
+function startMusic(){
+  const m = document.getElementById('bgm');
+  m.volume = 0.4;
+  m.play().catch(()=>{});
+}function go(n){ document.querySelector('.question.active').classList.remove('active'); document.getElementById('q'+n).classList.add('active'); }
+
+// Random moving NO button (bounces on edges) const noBtn = document.getElementById('q5_no'); let x=100, y=100, vx=2, vy=2; function moveNo(){ const w = window.innerWidth - 80; const h = window.innerHeight - 40; x += vx; y += vy; if(x<=0 || x>=w) vx*=-1; if(y<=0 || y>=h) vy*=-1; noBtn.style.transform = translate(${x}px, ${y}px); requestAnimationFrame(moveNo); } moveNo();
+
+// Yes expands like a cake then goes to Q6 function cakeExpand(){ const b = document.getElementById('q5_yes'); b.style.transition = 'all 1s'; b.style.width = '220px'; b.style.height = '120px'; b.style.borderRadius = '8px'; setTimeout(()=>{ document.getElementById('q5').classList.remove('active'); document.getElementById('q6').classList.add('active'); },1200); }
+
+// Fireworks for 5 seconds then show final function startFireworks(){ document.getElementById('q6').classList.remove('active'); const fw = document.getElementById('fireworks'); fw.style.display='block'; const start = Date.now(); function pop(){ if(Date.now()-start > 5000){ fw.style.display='none'; showFinal(); return; } for(let i=0;i<20;i++){ const d=document.createElement('div'); d.className='fire'; d.style.left=Math.random()*100+'%'; d.style.top=Math.random()*100+'%'; fw.appendChild(d); setTimeout(()=>d.remove(),600); } setTimeout(pop,300); } pop(); }
+
+function showFinal(){ document.getElementById('final').style.display='block'; setTimeout(()=>document.getElementById('l1').style.display='block',500); setTimeout(()=>document.getElementById('l2').style.display='block',1200); setTimeout(()=>document.getElementById('l3').style.display='block',1900); setTimeout(()=>document.getElementById('c1').style.display='block',2600); setTimeout(()=>document.getElementById('f1').style.display='block',3200); } </script>
+
+</body>
+</html>
