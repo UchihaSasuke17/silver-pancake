@@ -10,49 +10,65 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            overflow-x: hidden;
         }
         
         .container {
             width: 100%;
             max-width: 500px;
-            background: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.5),
+                0 0 50px rgba(128, 0, 255, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            padding: 10px;
+        }
+        
+        .inner-container {
+            background: linear-gradient(to bottom, rgba(30, 30, 60, 0.9), rgba(10, 10, 30, 0.9));
             border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            position: relative;
             overflow: hidden;
         }
         
         .url-bar {
-            background: #f8f9fa;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
             padding: 12px 20px;
-            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
         }
         
         .lock-icon {
-            color: #28a745;
+            color: #4CAF50;
+            margin-right: 10px;
             font-size: 14px;
         }
         
         .url-text {
-            color: #495057;
-            font-family: 'Courier New', monospace;
+            color: #88c0ff;
             font-size: 14px;
-        }
-        
-        .content {
-            padding: 30px;
+            letter-spacing: 0.5px;
+            font-family: 'Courier New', monospace;
         }
         
         .header {
@@ -62,118 +78,144 @@
         
         .header h1 {
             font-size: 2.2rem;
-            color: #333;
             margin-bottom: 10px;
+            background: linear-gradient(to right, #ff7ee6, #a07cff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(160, 124, 255, 0.5);
+            letter-spacing: 1px;
         }
         
         .header p {
-            color: #666;
-            font-size: 1.1rem;
-        }
-        
-        .screen {
-            display: none;
-        }
-        
-        .screen.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
+            color: #d0d0ff;
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
         
         .question-number {
-            color: #764ba2;
-            font-size: 0.9rem;
+            color: #a07cff;
+            font-size: 1rem;
+            margin-bottom: 15px;
             font-weight: 600;
-            margin-bottom: 10px;
-            text-transform: uppercase;
+            text-align: center;
             letter-spacing: 1px;
         }
         
         .question-text {
-            font-size: 1.5rem;
-            color: #333;
-            margin-bottom: 25px;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #ffffff;
             line-height: 1.4;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
         
         .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             margin-bottom: 30px;
         }
         
         .option {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 16px 20px;
-            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(160, 124, 255, 0.3);
+            border-radius: 15px;
+            padding: 18px;
+            font-size: 1.3rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1.1rem;
-            color: #333;
+            text-align: center;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
         }
         
         .option:hover {
-            background: #e9ecef;
-            transform: translateY(-2px);
+            background: rgba(160, 124, 255, 0.2);
+            border-color: #a07cff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
         
-        .option.selected {
-            background: #667eea;
-            border-color: #667eea;
-            color: white;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        .option.moon-selected {
+            background: linear-gradient(135deg, rgba(160, 124, 255, 0.3), rgba(255, 126, 230, 0.3));
+            border-color: #ff7ee6;
+            box-shadow: 
+                0 0 30px rgba(255, 126, 230, 0.5),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+        
+        .moon-dust {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 2;
         }
         
         .progress-container {
-            margin-top: 30px;
+            margin-top: 20px;
         }
         
         .progress-text {
-            color: #666;
-            font-size: 0.9rem;
+            color: #d0d0ff;
+            text-align: center;
             margin-bottom: 8px;
+            font-size: 0.9rem;
         }
         
         .progress-bar {
-            height: 6px;
-            background: #e9ecef;
-            border-radius: 3px;
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
             overflow: hidden;
         }
         
         .progress {
             height: 100%;
-            background: linear-gradient(to right, #667eea, #764ba2);
-            width: 14.28%;
+            background: linear-gradient(to right, #ff7ee6, #a07cff);
+            width: 0%;
             transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(255, 126, 230, 0.7);
         }
         
         /* Bouncing NO container */
-        .bouncing-container {
-            height: 200px;
+        .bouncing-no-container {
             position: relative;
-            background: #f8f9fa;
-            border-radius: 15px;
+            height: 200px;
             margin: 20px 0;
-            border: 2px dashed #dee2e6;
+            border-radius: 15px;
             overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
         }
         
         .bouncing-no {
             position: absolute;
             width: 100px;
             height: 100px;
-            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            background: linear-gradient(135deg, #ff4757, #ff6b6b);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
             font-weight: bold;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
-            user-select: none;
+            box-shadow: 
+                0 0 30px rgba(255, 107, 107, 0.7),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+            z-index: 5;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            border: 3px solid rgba(255, 255, 255, 0.3);
         }
         
         .static-yes {
@@ -186,49 +228,76 @@
             align-items: center;
             color: white;
             font-weight: bold;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(46, 213, 115, 0.3);
-            margin: 20px auto;
-            transition: all 0.3s ease;
+            box-shadow: 
+                0 0 30px rgba(29, 209, 161, 0.7),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+            margin: 30px auto;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.5s ease;
         }
         
-        .static-yes:hover {
-            transform: scale(1.05);
+        .static-yes.expanded {
+            animation: expandYes 1s forwards;
+        }
+        
+        @keyframes expandYes {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1.2); background: linear-gradient(135deg, #ff9f43, #ffcc00); }
         }
         
         .single-yes {
-            width: 140px;
-            height: 140px;
-            background: linear-gradient(135deg, #ffd32a, #ffa801);
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, #ff9f43, #ffcc00);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #333;
             font-weight: bold;
-            font-size: 1.5rem;
+            font-size: 2rem;
             cursor: pointer;
-            box-shadow: 0 15px 30px rgba(255, 211, 42, 0.3);
-            margin: 30px auto;
+            box-shadow: 
+                0 0 40px rgba(255, 159, 67, 0.8),
+                0 0 60px rgba(255, 204, 0, 0.5);
+            margin: 40px auto;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            border: 4px solid rgba(255, 255, 255, 0.4);
             animation: pulse 2s infinite;
         }
         
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.1); }
         }
         
-        /* Birthday screen */
+        .single-yes:hover {
+            animation: none;
+            transform: scale(1.15);
+        }
+        
+        /* For two-option layout */
+        .two-options {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 30px 0;
+        }
+        
+        /* Final birthday screen */
         .birthday-screen {
             text-align: center;
         }
         
         .cake {
             position: relative;
-            width: 200px;
-            height: 150px;
-            margin: 20px auto;
+            width: 250px;
+            height: 180px;
+            margin: 30px auto;
         }
         
         .layer {
@@ -237,244 +306,288 @@
             left: 50%;
             transform: translateX(-50%);
             opacity: 0;
-            animation: layerAppear 1s forwards;
+            animation: fadeInUp 1s forwards;
         }
         
         .layer-1 {
-            width: 180px;
+            width: 200px;
             height: 40px;
-            background: #8B4513;
+            background: linear-gradient(to right, #8B4513, #D2691E);
             bottom: 0;
-            animation-delay: 0.3s;
+            animation-delay: 0.5s;
         }
         
         .layer-2 {
-            width: 150px;
+            width: 180px;
             height: 40px;
-            background: #A0522D;
+            background: linear-gradient(to right, #A0522D, #CD853F);
             bottom: 40px;
-            animation-delay: 1.3s;
+            animation-delay: 1.5s;
         }
         
         .layer-3 {
-            width: 120px;
+            width: 160px;
             height: 30px;
-            background: #D2691E;
+            background: linear-gradient(to right, #D2691E, #F4A460);
             bottom: 80px;
-            animation-delay: 2.3s;
+            animation-delay: 2.5s;
         }
         
         .candle {
             position: absolute;
-            width: 6px;
-            height: 30px;
-            background: #FFD700;
-            border-radius: 3px;
+            width: 8px;
+            height: 40px;
+            background: linear-gradient(to bottom, #FFD700, #FFA500);
+            border-radius: 4px;
             bottom: 110px;
             opacity: 0;
-            animation: candleAppear 0.5s forwards;
+            animation: fadeIn 0.5s forwards;
         }
         
-        .candle-1 { left: 40%; animation-delay: 3.3s; }
-        .candle-2 { left: 50%; transform: translateX(-50%); animation-delay: 3.6s; }
-        .candle-3 { right: 40%; animation-delay: 3.9s; }
+        .candle:nth-child(1) { left: 30%; animation-delay: 3.5s; }
+        .candle:nth-child(2) { left: 45%; animation-delay: 4s; }
+        .candle:nth-child(3) { left: 60%; animation-delay: 4.5s; }
         
         .flame {
             position: absolute;
-            width: 12px;
-            height: 20px;
-            background: #FF4500;
+            width: 15px;
+            height: 25px;
+            background: radial-gradient(#FFD700, #FF4500);
             border-radius: 50% 50% 20% 20%;
-            top: -20px;
+            top: -25px;
             left: 50%;
             transform: translateX(-50%);
             opacity: 0;
-            animation: flameAppear 0.5s forwards;
+            animation: flameAppear 0.5s forwards, flameFlicker 0.3s infinite alternate;
         }
         
         .birthday-text {
             font-size: 2.5rem;
             font-weight: bold;
-            color: #764ba2;
             margin: 30px 0;
-            height: 60px;
+            color: transparent;
+            background: linear-gradient(to right, #ff7ee6, #a07cff, #7ee5ff);
+            -webkit-background-clip: text;
+            background-clip: text;
             overflow: hidden;
+            height: 60px;
         }
         
         .letter {
             display: inline-block;
             opacity: 0;
-            transform: translateY(20px);
-            animation: letterAppear 0.5s forwards;
+            transform: translateX(30px);
+            animation: slideIn 0.5s forwards;
         }
         
         /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
-        @keyframes layerAppear {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-        
-        @keyframes candleAppear {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateX(-50%) translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
         
         @keyframes flameAppear {
-            from { opacity: 0; transform: translateX(-50%) scale(0.5); }
-            to { opacity: 1; transform: translateX(-50%) scale(1); }
+            from { 
+                opacity: 0;
+                transform: translateX(-50%) scale(0.5);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(-50%) scale(1);
+            }
         }
         
-        @keyframes letterAppear {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes flameFlicker {
+            from { transform: translateX(-50%) scale(1); }
+            to { transform: translateX(-50%) scale(1.1); }
         }
         
-        .two-options {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            align-items: center;
-            margin: 30px 0;
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
         
+        /* Timer for fireworks */
+        .timer-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .timer-text {
+            color: #ffcc00;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        /* Responsive */
         @media (max-width: 600px) {
             .container {
                 max-width: 95%;
             }
             
-            .content {
-                padding: 20px;
+            .question-text {
+                font-size: 1.5rem;
+            }
+            
+            .option {
+                padding: 15px;
+                font-size: 1.2rem;
             }
             
             .two-options {
                 flex-direction: column;
-                gap: 30px;
+                gap: 20px;
+                align-items: center;
             }
             
-            .bouncing-no, .static-yes {
+            .bouncing-no {
                 width: 80px;
                 height: 80px;
-                font-size: 1.1rem;
+                font-size: 1.2rem;
+            }
+            
+            .static-yes {
+                width: 100px;
+                height: 100px;
             }
             
             .single-yes {
                 width: 120px;
                 height: 120px;
-                font-size: 1.3rem;
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- URL Bar -->
-        <div class="url-bar">
-            <i class="fas fa-lock lock-icon"></i>
-            <span class="url-text">uchihasasuke17.github.io</span>
-        </div>
-        
-        <!-- Content Area -->
-        <div class="content">
-            <div class="header">
-                <h1>Birthday Surprise!</h1>
-                <p>Answer these for a surprise 😄</p>
+        <div class="inner-container">
+            <!-- URL Bar -->
+            <div class="url-bar">
+                <i class="fas fa-lock lock-icon"></i>
+                <span class="url-text">uchihasasuke17.github.io/silver</span>
             </div>
             
-            <!-- Question 1 -->
+            <!-- Header -->
+            <div class="header">
+                <h1>Birthday Surprise!</h1>
+                <p>Answer these for a surprise 🥰</p>
+            </div>
+            
+            <!-- Screen 1: Question 1 -->
             <div id="screen-1" class="screen active">
                 <div class="question-number">Question 1 of 7</div>
                 <h2 class="question-text">Your name!!</h2>
                 <div class="options-container">
-                    <div class="option" data-option="Tanu">Tanu</div>
-                    <div class="option" data-option="Tanuja">Tanuja</div>
+                    <div class="option moon-option" data-option="Tanu">Tanu</div>
+                    <div class="option moon-option" data-option="Tanuja">Tanuja</div>
                 </div>
                 <div class="progress-container">
                     <div class="progress-text">Progress</div>
                     <div class="progress-bar">
-                        <div class="progress" style="width: 14.28%"></div>
+                        <div class="progress" style="width: 14%"></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Question 2 -->
+            <!-- Screen 2: Question 2 -->
             <div id="screen-2" class="screen">
                 <div class="question-number">Question 2 of 7</div>
                 <h2 class="question-text">The year you are born?</h2>
                 <div class="options-container">
-                    <div class="option" data-option="2008">2008</div>
-                    <div class="option" data-option="2007">2007</div>
-                    <div class="option" data-option="2006">2006</div>
+                    <div class="option moon-option" data-option="2008">2008</div>
+                    <div class="option moon-option" data-option="2007">2007</div>
+                    <div class="option moon-option" data-option="2006">2006</div>
                 </div>
                 <div class="progress-container">
                     <div class="progress-text">Progress</div>
                     <div class="progress-bar">
-                        <div class="progress" style="width: 28.56%"></div>
+                        <div class="progress" style="width: 28%"></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Question 3 -->
+            <!-- Screen 3: Question 3 -->
             <div id="screen-3" class="screen">
                 <div class="question-number">Question 3 of 7</div>
                 <h2 class="question-text">Choose a number</h2>
                 <div class="options-container">
-                    <div class="option" data-option="07">07</div>
-                    <div class="option" data-option="17">17</div>
-                    <div class="option" data-option="23">23</div>
+                    <div class="option moon-option" data-option="07">07</div>
+                    <div class="option moon-option" data-option="17">17</div>
+                    <div class="option moon-option" data-option="23">23</div>
                 </div>
                 <div class="progress-container">
                     <div class="progress-text">Progress</div>
                     <div class="progress-bar">
-                        <div class="progress" style="width: 42.84%"></div>
+                        <div class="progress" style="width: 42%"></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Question 4 -->
+            <!-- Screen 4: Question 4 -->
             <div id="screen-4" class="screen">
                 <div class="question-number">Question 4 of 7</div>
                 <h2 class="question-text">What do you love the most?</h2>
                 <div class="options-container">
-                    <div class="option" data-option="Beach">Beach</div>
-                    <div class="option" data-option="Mountain">Mountain</div>
-                    <div class="option" data-option="Night">Night full of stars</div>
+                    <div class="option moon-option" data-option="Beach">Beach</div>
+                    <div class="option moon-option" data-option="Mountain">Mountain</div>
+                    <div class="option moon-option" data-option="Night">Night full of stars</div>
                 </div>
                 <div class="progress-container">
                     <div class="progress-text">Progress</div>
                     <div class="progress-bar">
-                        <div class="progress" style="width: 57.12%"></div>
+                        <div class="progress" style="width: 56%"></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Question 5 -->
+            <!-- Screen 5: Question 5 -->
             <div id="screen-5" class="screen">
                 <div class="question-number">Question 5 of 7</div>
                 <h2 class="question-text">What's your dream vacation spot?</h2>
                 <div class="options-container">
-                    <div class="option" data-option="Beach">Beach</div>
-                    <div class="option" data-option="Mountains">Mountains</div>
-                    <div class="option" data-option="City">City</div>
+                    <div class="option moon-option" data-option="Beach">Beach</div>
+                    <div class="option moon-option" data-option="Mountains">Mountains</div>
+                    <div class="option moon-option" data-option="City">City</div>
                 </div>
                 <div class="progress-container">
                     <div class="progress-text">Progress</div>
                     <div class="progress-bar">
-                        <div class="progress" style="width: 71.4%"></div>
+                        <div class="progress" style="width: 70%"></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Question 6 (Bouncing NO) -->
+            <!-- Screen 6: Question 6 (BOUNCING NO) -->
             <div id="screen-6" class="screen">
                 <div class="question-number">Question 6 of 7</div>
                 <h2 class="question-text">Are you my best friend?</h2>
                 <div class="two-options">
-                    <div class="bouncing-container">
+                    <div class="bouncing-no-container">
                         <div id="bouncing-no" class="bouncing-no">No</div>
                     </div>
                     <div id="static-yes" class="static-yes">Yes</div>
@@ -482,195 +595,165 @@
                 <div class="progress-container">
                     <div class="progress-text">Progress</div>
                     <div class="progress-bar">
-                        <div class="progress" style="width: 85.68%"></div>
+                        <div class="progress" style="width: 85%"></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Question 7 (Single YES) -->
+            <!-- Screen 7: Question 7 (Single YES) -->
             <div id="screen-7" class="screen">
                 <div class="question-number">Question 7 of 7</div>
                 <h2 class="question-text">Are you ready for your birthday presentation?</h2>
                 <div id="single-yes" class="single-yes">Yes!</div>
                 <div class="progress-container">
                     <div class="progress-text">Progress</div>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: 100%"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Birthday Final Screen -->
-            <div id="birthday-screen" class="screen">
-                <div class="birthday-screen">
-                    <h2 class="question-text">🎂 Happy Birthday! 🎂</h2>
-                    <div class="cake">
-                        <div class="layer layer-1"></div>
-                        <div class="layer layer-2"></div>
-                        <div class="layer layer-3"></div>
-                        <div class="candle candle-1">
-                            <div class="flame"></div>
-                        </div>
-                        <div class="candle candle-2">
-                            <div class="flame"></div>
-                        </div>
-                        <div class="candle candle-3">
-                            <div class="flame"></div>
-                        </div>
-                    </div>
-                    <div class="birthday-text" id="birthday-text"></div>
-                    <p style="color: #666; margin-top: 20px;">
-                        Wishing you the happiest birthday! May all your dreams come true! 🎉✨
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-                // Current question
+               // Current question tracker
         let currentQuestion = 1;
         let velocityX = 3, velocityY = 2;
-        let bounceInterval;
+        let bouncingInterval;
         
-        // Show specific screen
-        function showScreen(screenNum) {
-            // Hide all screens
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            
-            // Show requested screen
-            const screenId = screenNum === 'birthday' ? 'birthday-screen' : `screen-${screenNum}`;
-            document.getElementById(screenId).classList.add('active');
-            
-            // Special setup for bouncing NO
-            if (screenNum === 6) {
-                setTimeout(startBouncingNo, 100);
-            }
-            
-            // Special setup for birthday screen
-            if (screenNum === 'birthday') {
-                startBirthdayAnimation();
+        // Create moon dust particles
+        function createMoonDust(option) {
+            for (let i = 0; i < 20; i++) {
+                const dust = document.createElement('div');
+                dust.className = 'moon-dust';
+                
+                const rect = option.getBoundingClientRect();
+                const x = Math.random() * rect.width;
+                const y = Math.random() * rect.height;
+                
+                dust.style.left = `${x}px`;
+                dust.style.top = `${y}px`;
+                
+                const size = Math.random() * 6 + 3;
+                dust.style.width = `${size}px`;
+                dust.style.height = `${size}px`;
+                
+                option.appendChild(dust);
+                
+                // Random color
+                const colors = ['#ffffff', '#a07cff', '#ff7ee6', '#7ee5ff'];
+                dust.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                dust.style.boxShadow = `0 0 ${size}px ${dust.style.backgroundColor}`;
+                
+                // Animate
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 60 + 30;
+                
+                dust.animate([
+                    { opacity: 0.9, transform: 'translate(0, 0) scale(1)' },
+                    { opacity: 0, transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0.1)` }
+                ], {
+                    duration: Math.random() * 800 + 500,
+                    easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
+                });
+                
+                setTimeout(() => {
+                    if (dust.parentNode) dust.parentNode.removeChild(dust);
+                }, 1300);
             }
         }
         
-        // Start bouncing NO animation
+        // Play Happy Birthday tune (ORIGINAL MUSIC)
+        function playBirthdaySound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // "Happy Birthday" melody notes
+                const notes = [
+                    523.25, 523.25, 587.33, 523.25, 698.46, 659.25,
+                    523.25, 523.25, 587.33, 523.25, 783.99, 698.46
+                ];
+                
+                let time = audioContext.currentTime;
+                
+                for (let i = 0; i < notes.length; i++) {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(notes[i], time + i * 0.3);
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.2, time + i * 0.3);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, time + i * 0.3 + 0.25);
+                    
+                    oscillator.start(time + i * 0.3);
+                    oscillator.stop(time + i * 0.3 + 0.25);
+                }
+            } catch (e) {
+                console.log("Audio not supported");
+            }
+        }
+        
+        // Start bouncing NO
         function startBouncingNo() {
             const bouncingNo = document.getElementById('bouncing-no');
             if (!bouncingNo) return;
             
-            const container = document.querySelector('.bouncing-container');
-            if (!container) return;
+            const container = document.querySelector('.bouncing-no-container');
+            const containerRect = container.getBoundingClientRect();
             
             // Random starting position
-            const containerRect = container.getBoundingClientRect();
             let posX = Math.random() * (containerRect.width - 100);
             let posY = Math.random() * (containerRect.height - 100);
             
             bouncingNo.style.left = `${posX}px`;
             bouncingNo.style.top = `${posY}px`;
             
-            // Clear previous interval
-            clearInterval(bounceInterval);
+            clearInterval(bouncingInterval);
             
-            // Start bouncing animation
-            bounceInterval = setInterval(() => {
+            bouncingInterval = setInterval(() => {
                 const rect = bouncingNo.getBoundingClientRect();
-                const containerRect = container.getBoundingClientRect();
+                const containerCurrentRect = container.getBoundingClientRect();
                 
                 // Bounce off edges
-                if (rect.left <= 0 || rect.right >= containerRect.width) {
+                if (rect.left <= containerCurrentRect.left || rect.right >= containerCurrentRect.right) {
                     velocityX = -velocityX;
-                    // Bounce effect
                     bouncingNo.style.transform = 'scale(0.9)';
                     setTimeout(() => bouncingNo.style.transform = 'scale(1)', 100);
                 }
                 
-                if (rect.top <= 0 || rect.bottom >= containerRect.height) {
+                if (rect.top <= containerCurrentRect.top || rect.bottom >= containerCurrentRect.bottom) {
                     velocityY = -velocityY;
-                    // Bounce effect
                     bouncingNo.style.transform = 'scale(0.9)';
                     setTimeout(() => bouncingNo.style.transform = 'scale(1)', 100);
                 }
                 
-                // Update position
                 posX += velocityX;
                 posY += velocityY;
                 
                 bouncingNo.style.left = `${posX}px`;
                 bouncingNo.style.top = `${posY}px`;
                 
-                // Random direction change occasionally
+                // Random direction changes
                 if (Math.random() < 0.02) {
                     velocityX += (Math.random() - 0.5) * 0.5;
                     velocityY += (Math.random() - 0.5) * 0.5;
-                    
-                    // Limit speed
-                    velocityX = Math.max(-5, Math.min(5, velocityX));
-                    velocityY = Math.max(-5, Math.min(5, velocityY));
                 }
                 
-            }, 16); // ~60fps
+            }, 16);
         }
         
-        // Play sound
-        function playSound() {
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                // Happy sound
-                oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(659.25, audioContext.currentTime + 0.2);
-                
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-                
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.3);
-                
-                setTimeout(() => {
-                    oscillator.disconnect();
-                    gainNode.disconnect();
-                }, 400);
-            } catch (e) {
-                // Sound not supported
-            }
-        }
-        
-        // Setup regular questions (1-5)
-        function setupRegularQuestions() {
-            document.querySelectorAll('#screen-1 .option, #screen-2 .option, #screen-3 .option, #screen-4 .option, #screen-5 .option').forEach(option => {
-                option.addEventListener('click', function() {
-                    // Remove selection from all options in this question
-                    const parent = this.parentElement;
-                    parent.querySelectorAll('.option').forEach(opt => {
-                        opt.classList.remove('selected');
-                    });
-                    
-                    // Select this option
-                    this.classList.add('selected');
-                    playSound();
-                    
-                    // Find current screen number
-                    const screenId = this.closest('.screen').id;
-                    const screenNum = parseInt(screenId.split('-')[1]);
-                    
-                    // Move to next question after delay
-                    setTimeout(() => {
-                        if (screenNum < 5) {
-                            showScreen(screenNum + 1);
-                        } else {
-                            showScreen(6);
-                        }
-                    }, 800);
-                });
+        // Switch screens
+        function showScreen(screenNumber) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
             });
+            
+            const screenId = screenNumber === 'birthday' ? 'birthday-screen' : `screen-${screenNumber}`;
+            document.getElementById(screenId).classList.add('active');
+            
+            // Special setups
+            if (screenNumber === 6) {
+                setTimeout(() => startBouncingNo(), 100);
+            }
+            
+            if (screenNumber === 'birthday') {
+                startBirthdayAnimation();
+            }
         }
         
         // Setup question 6 (bouncing NO)
@@ -678,28 +761,23 @@
             const staticYes = document.getElementById('static-yes');
             const bouncingNo = document.getElementById('bouncing-no');
             
-            // YES button click
             staticYes.addEventListener('click', function() {
-                playSound();
-                this.style.transform = 'scale(1.2)';
+                playBirthdaySound();
+                createMoonDust(this);
+                this.classList.add('expanded');
                 
-                setTimeout(() => {
-                    showScreen(7);
-                }, 500);
+                setTimeout(() => showScreen(7), 1500);
             });
             
-            // NO button click
             bouncingNo.addEventListener('click', function() {
-                playSound();
+                playBirthdaySound();
+                createMoonDust(this);
                 
-                // Bounce away effect
                 velocityX = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 4 + 3);
                 velocityY = (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 4 + 3);
                 
                 this.style.transform = 'scale(0.8) rotate(10deg)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1) rotate(0deg)';
-                }, 300);
+                setTimeout(() => this.style.transform = 'scale(1) rotate(0deg)', 300);
             });
         }
         
@@ -708,18 +786,56 @@
             const singleYes = document.getElementById('single-yes');
             
             singleYes.addEventListener('click', function() {
-                playSound();
-                this.style.animation = 'none';
-                this.style.transform = 'scale(1.3)';
+                playBirthdaySound();
+                createMoonDust(this);
                 
-                setTimeout(() => {
-                    showScreen('birthday');
-                }, 800);
+                // Start timer for fireworks
+                document.getElementById('timer-container').style.display = 'block';
+                let count = 5;
+                const timer = setInterval(() => {
+                    document.getElementById('timer-count').textContent = count;
+                    count--;
+                    
+                    if (count < 0) {
+                        clearInterval(timer);
+                        document.getElementById('timer-container').style.display = 'none';
+                        showScreen('birthday');
+                    }
+                }, 1000);
+            });
+        }
+        
+        // Setup regular questions (1-5)
+        function setupRegularQuestions() {
+            document.querySelectorAll('.moon-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    if (this.classList.contains('selected')) return;
+                    
+                    playBirthdaySound();
+                    createMoonDust(this);
+                    this.classList.add('selected');
+                    
+                    const currentScreen = this.closest('.screen');
+                    const screenId = currentScreen.id;
+                    const questionNum = parseInt(screenId.split('-')[1]);
+                    
+                    setTimeout(() => {
+                        if (questionNum < 5) {
+                            showScreen(questionNum + 1);
+                            setTimeout(() => setupRegularQuestions(), 100);
+                        } else if (questionNum === 5) {
+                            showScreen(6);
+                            setTimeout(() => setupQuestion6(), 100);
+                        }
+                    }, 1000);
+                });
             });
         }
         
         // Birthday animation
         function startBirthdayAnimation() {
+            playBirthdaySound();
+            
             // Animate "Happy Birthday" text
             const text = "Happy Birthday!";
             const textDiv = document.getElementById('birthday-text');
@@ -733,23 +849,14 @@
                 textDiv.appendChild(letter);
             }
             
-            // Play birthday tune
-            playSound();
-            setTimeout(() => playSound(), 500);
-            setTimeout(() => playSound(), 1000);
+            // Play birthday song again
+            setTimeout(() => playBirthdaySound(), 3000);
         }
         
-        // Initialize everything
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            // Setup regular questions
             setupRegularQuestions();
-            
-            // Setup question 6
-            setupQuestion6();
-            
-            // Setup question 7
-            setupQuestion7();
         });
     </script>
 </body>
-</html>
+            </html>
