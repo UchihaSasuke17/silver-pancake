@@ -199,7 +199,7 @@ document.getElementById('next-1').addEventListener('click', function() {
     }
 });
 
-// Page 2 Next
+// Page 2 Next - FIXED
 document.getElementById('next-2').addEventListener('click', function() {
     const year = document.getElementById('year-input').value;
     if (year.trim()) {
@@ -210,10 +210,12 @@ document.getElementById('next-2').addEventListener('click', function() {
 });
 
 // Page 3 Next
-document.getElementById('next-3').addEventListener('click', nextPage);
+document.getElementById('next-3').addEventListener('click', function() {
+    nextPage();
+});
 
 // Page 4 - Paper Airplane Selection
-document.querySelectorAll('.airplane').forEach(plane => {
+document.querySelectorAll('#page-4 .airplane').forEach(plane => {
     plane.addEventListener('click', function() {
         if (selectedNumber) return;
         
@@ -227,7 +229,7 @@ document.querySelectorAll('.airplane').forEach(plane => {
         
         this.classList.add('fly-away');
         
-        document.querySelectorAll('.airplane').forEach(p => {
+        document.querySelectorAll('#page-4 .airplane').forEach(p => {
             if (p !== this) {
                 p.style.opacity = '0.3';
                 p.style.pointerEvents = 'none';
@@ -242,7 +244,9 @@ document.querySelectorAll('.airplane').forEach(plane => {
 });
 
 // Page 5 Next
-document.getElementById('next-5').addEventListener('click', nextPage);
+document.getElementById('next-5').addEventListener('click', function() {
+    nextPage();
+});
 
 // Options for pages 6-13
 for (let i = 6; i <= 13; i++) {
@@ -258,7 +262,9 @@ for (let i = 6; i <= 13; i++) {
 }
 
 // Page 15 Next
-document.getElementById('next-15').addEventListener('click', nextPage);
+document.getElementById('next-15').addEventListener('click', function() {
+    nextPage();
+});
 
 // Page 16 Heart Yes Button
 document.getElementById('heart-yes-16').addEventListener('click', function() {
