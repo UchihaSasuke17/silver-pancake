@@ -199,7 +199,7 @@ document.getElementById('next-1').addEventListener('click', function() {
     }
 });
 
-// Page 2 Next - FIXED
+// Page 2 Next
 document.getElementById('next-2').addEventListener('click', function() {
     const year = document.getElementById('year-input').value;
     if (year.trim()) {
