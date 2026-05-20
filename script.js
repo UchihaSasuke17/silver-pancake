@@ -33,9 +33,9 @@ const foodQuestions = [
 ];
 
 const riddles = [
-    { text: "I can hold moments forever, Yet I'm not alive. Open me and memories return. What am I?", format: "P_O_O A_B_M", answer: "PHOTO ALBUM", time: 15, kitkatSec: 5 },
-    { text: "I follow you everywhere, But disappear in darkness. What am I?", format: "SH_D_W", answer: "SHADOW", time: 15, kitkatSec: 5 },
-    { text: "I have keys but no locks, Space but no rooms, Once you enter you can only escape. What am I?", format: "K_Y B___D", answer: "KEYBOARD", time: 9, kitkatSec: 3 }
+    { text: "I can hold moments forever, Yet I'm not alive. Open me and memories return. What am I?", format: "P_O_O A_B_M", answer: "PHOTO ALBUM", kitkatSec: 5 },
+    { text: "I follow you everywhere, But disappear in darkness. What am I?", format: "SH_D_W", answer: "SHADOW", kitkatSec: 5 },
+    { text: "I have keys but no locks, Space but no rooms, Once you enter you can only escape. What am I?", format: "K_Y B___D", answer: "KEYBOARD", kitkatSec: 3 }
 ];
 
 const giftMessages = [
@@ -64,7 +64,7 @@ function playPopSound() {
 function playGiftSound() {
     if (!musicEnabled) return;
     const gift = document.getElementById('giftSound');
-    if (gift) { gift.currentTime = 0; gift.play().catch(e => console.log('Gift error')); }
+    if (gift) { gift.currentTime = 0; gift.play().catch(e => console.log('Gift sound error')); }
 }
 
 function playSuccessSound() {
@@ -125,20 +125,12 @@ function nextPage() {
 
 function closeSite() { document.body.innerHTML = '<div style="text-align:center; padding:60px; color:white;"><h1>Goodbye!</h1></div>'; }
 
-// ==================== FIXED: validateName FUNCTION ====================
 function validateName() {
     const name = document.getElementById('nameInput').value.trim();
-    if (!name) {
-        alert('Please enter your name');
-        return;
-    }
+    if (!name) { alert('Please enter your name'); return; }
     userName = name;
-    if (userName.toLowerCase() === 'shweta') {
-        showPage('mailboxPage');
-    } else {
-        document.getElementById('rejectNameMsg').innerHTML = `Welcome ${userName}`;
-        showPage('reject1');
-    }
+    if (userName.toLowerCase() === 'shweta') { showPage('mailboxPage'); playBackgroundMusic(); }
+    else { document.getElementById('rejectNameMsg').innerHTML = `Welcome ${userName}`; showPage('reject1'); }
 }
 
 function nextReject() { rejectStep++; if (rejectStep === 2) showPage('reject2'); else if (rejectStep === 3) showPage('reject3'); else closeSite(); }
@@ -248,21 +240,42 @@ function showGiftBoxes() {
     const allCorrect = (totalCorrect === riddles.length);
     const foodChoice = foodAnswers[4] || 'Kitkat';
     const container = document.getElementById('dynamicContent');
-    container.innerHTML = `<div class="page active" style="display:block"><div class="page-header"><span class="page-number">🎁 Gift Boxes</span></div><div class="gifts-grid" id="giftsGrid">${Array(7).fill(0).map((_, i) => `<div class="balloon-gift" onclick="openGift(${i})"><div class="balloon-icon">🎈</div><div class="gift-icon">🎁</div></div>`).join('')}</div><div id="giftMsg" class="gift-message-area"></div></div>`;
+    container.innerHTML = `
+        <div class="page active" style="display:block">
+            <div class="page-header"><span class="page-number">🎁 Gift Boxes 🎈</span></div>
+            <div class="gifts-grid" id="giftsGrid">
+                ${Array(7).fill(0).map((_, i) => `
+                    <div class="balloon-gift" onclick="openGift(${i})">
+                        <div class="balloon-icon">🎈</div>
+                        <div class="gift-icon">🎁</div>
+                    </div>
+                `).join('')}
+            </div>
+            <div id="giftMessage" class="gift-message-area"></div>
+        </div>
+    `;
     giftState = { opened: [], allCorrect, foodChoice, correctCount: totalCorrect };
 }
 
-function openGift(idx) {
-    if (giftState.opened.includes(idx)) return;
+function openGift(index) {
+    if (giftState.opened.includes(index)) return;
     playGiftSound();
-    giftState.opened.push(idx);
-    const msgDiv = document.getElementById('giftMsg');
-    let msg = '';
-    if (giftState.opened.length === 1) msg = giftMessages[0](giftState.correctCount);
-    else if (giftState.opened.length === 2) msg = giftMessages[1](giftState.foodChoice);
-    else if (giftState.opened.length === 3) msg = giftMessages[2](giftState.allCorrect);
-    if (msg) msgDiv.innerHTML += `<p>🎁 ${msg}</p>`;
-    if (giftState.opened.length >= 3) setTimeout(() => showFinalQuote(), 1000);
+    giftState.opened.push(index);
+    const msgDiv = document.getElementById('giftMessage');
+    let message = '';
+    if (giftState.opened.length === 1) {
+        message = giftMessages[0](giftState.correctCount);
+    } else if (giftState.opened.length === 2) {
+        message = giftMessages[1](giftState.foodChoice);
+    } else if (giftState.opened.length === 3) {
+        message = giftMessages[2](giftState.allCorrect);
+    }
+    if (message) {
+        msgDiv.innerHTML += `<p>🎁 ${message}</p>`;
+    }
+    if (giftState.opened.length >= 3) {
+        setTimeout(() => showFinalQuote(), 1000);
+    }
 }
 
 function showFinalQuote() {
@@ -287,7 +300,7 @@ function showHugeGiftBox() {
 
 function showPuzzle() { playPopSound(); const container = document.getElementById('dynamicContent'); container.innerHTML = `<div class="page active" style="display:block"><div class="page-header"><span class="page-number">🧩 Puzzle</span></div><div class="puzzle-container"><div class="puzzle-grid" id="puzzleGrid"></div></div><div id="puzzleMsg" class="puzzle-message"></div></div>`; initPuzzle(); }
 
-const imageUrl = 'shweta.png';
+const imageUrl = 'shweta.jpg';
 let pieces = [];
 let emptyIndex = 15;
 const puzzleSize = 4;
