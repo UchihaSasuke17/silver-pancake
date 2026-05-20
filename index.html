@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Surprise for Shweta</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a2a, #1a1a3e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 550px;
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .page { display: none; text-align: center; }
+        .page.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { color: white; font-size: 2rem; margin-bottom: 15px; }
+        h2 { color: #FFD700; font-size: 1.5rem; margin-bottom: 20px; }
+        .subtitle { color: rgba(255,255,255,0.7); margin-bottom: 30px; }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 50px;
+            border: none;
+            text-align: center;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.9);
+        }
+
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,107,107,0.4); }
+
+        .option {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,215,0,0.3);
+            border-radius: 50px;
+            padding: 12px;
+            margin: 10px 0;
+            cursor: pointer;
+            color: white;
+            transition: 0.3s;
+        }
+        .option:hover { background: rgba(255,215,0,0.2); transform: scale(1.02); }
+
+        .timer { color: #FFD700; margin: 15px 0; font-size: 1.2rem; }
+        .kitkat { font-size: 2rem; letter-spacing: 8px; margin: 15px 0; }
+
+        .gift-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 20px 0; }
+        .gift-item { text-align: center; cursor: pointer; transition: 0.3s; }
+        .gift-item:hover { transform: translateY(-10px); }
+        .gift-icon { font-size: 2.5rem; background: linear-gradient(135deg, #ff69b4, #ff1493); border-radius: 15px; padding: 15px; margin-top: 5px; }
+
+        .puzzle-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; background: #2a2a4a; border: 3px solid #FFD700; border-radius: 12px; overflow: hidden; aspect-ratio: 1 / 1; margin: 20px 0; }
+        .puzzle-piece { cursor: pointer; transition: 0.15s; background-size: 400% 400%; }
+        .puzzle-piece.empty { background: #1a1a3a !important; }
+        .puzzle-piece.empty::after { content: "⬜"; display: flex; align-items: center; justify-content: center; height: 100%; font-size: 1.5rem; }
+
+        .mailbox { font-size: 5rem; cursor: pointer; display: inline-block; transition: 0.3s; }
+        .mailbox:hover { transform: scale(1.05); }
+        .hidden { display: none; }
+
+        .quote-text { font-size: 1.2rem; line-height: 1.6; color: #FFD700; font-style: italic; margin: 20px 0; }
+        .message-area { background: rgba(255,215,0,0.1); border-radius: 15px; padding: 15px; margin: 15px 0; color: #FFD700; }
+
+        .music-control {
+            position: fixed; bottom: 20px; right: 20px;
+            background: rgba(0,0,0,0.6); width: 50px; height: 50px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 1000; font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+
+    <!-- PAGE 1 -->
+    <div id="page1" class="page active">
+        <h1>✨ Birthday Surprise ✨</h1>
+        <p class="subtitle">Enter your name</p>
+        <input type="text" id="nameInput" placeholder="Type your name...">
+        <button onclick="validateName()">Continue →</button>
+    </div>
+
+    <!-- REJECTION PAGES -->
+    <div id="reject1" class="page"><div class="mailbox">📬</div><p id="rejectMsg"></p><button onclick="nextReject()">Next →</button></div>
+    <div id="reject2" class="page"><h2>Are you Shweta?? Is it Your Birthday Today??</h2><button onclick="nextReject()">Next →</button></div>
+    <div id="reject3" class="page"><h2>I don't think so</h2><button onclick="closeSite()">Close</button></div>
+
+    <!-- MAILBOX PAGE -->
+    <div id="mailboxPage" class="page">
+        <div class="mailbox" id="mailboxBtn" onclick="openMailbox()">📬</div>
+        <div id="letterArea"></div>
+        <div id="petalArea"></div>
+        <p id="welcomeMsg" class="hidden" style="color:#FFD700; font-size:1.5rem;"></p>
+        <button id="nextBtn" class="hidden" onclick="nextFromMailbox()">Continue →</button>
+    </div>
+
+    <!-- QUOTE PAGE -->
+    <div id="quotePage" class="page">
+        <div class="quote-text">"Like stars that shine brightest in the darkest night, you have your own ways to make things beautiful."</div>
+        <button onclick="startQuiz()">Next →</button>
+    </div>
+
+    <!-- DYNAMIC CONTENT -->
+    <div id="dynamic"></div>
+
+</div>
+
+<div class="music-control" id="musicCtrl" onclick="toggleMusic()">🔊</div>
+
+<audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8f7b6c6.mp3?filename=happy-birthday-8bit-108744.mp3" type="audio/mpeg">
+</audio>
+<audio id="popSound"><source src="https://www.soundjay.com/misc/sounds/pop-39248.mp3" type="audio/mpeg"></audio>
+<audio id="giftSound"><source src="https://www.soundjay.com/misc/sounds/gift-opening-29572.mp3" type="audio/mpeg"></audio>
+
+<script>
+    // ========== VARIABLES ==========
+    let userName = '';
+    let currentPage = 'page1';
+    let rejectStep = 1;
+    let anotherAnswers = [];
+    let foodAnswers = [];
+    let totalCorrect = 0;
+    let quizSection = 'another';
+    let qIndex = 0;
+    let quizTimer = null;
+    let riddleTimer = null;
+    let currentRiddle = 0;
+    let giftOpened = [];
+    let puzzleSolved = false;
+    let pieces = [];
+    let emptyIndex = 15;
+    let music = null;
+    let musicEnabled = true;
+
+    // QUESTIONS
+    const anotherQ = [
+        { q: "What would you prefer?", a: "Early Morning Vibes", b: "Midnight Vibes" },
+        { q: "What would you prefer?", a: "Like to be Alone", b: "Like to be with people" },
+        { q: "What would you prefer?", a: "Spending Summer on a beach", b: "Long ride on a bike at night" },
+        { q: "What would you prefer?", a: "Cooking food alone", b: "Cooking with friends around a bonfire at night" },
+        { q: "What would you prefer?", a: "Taking a walk alone at night", b: "Lying down and looking at the starry sky" }
+    ];
+
+    const foodQ = [
+        { q: "What is your favourite?", a: "Noodles", b: "Panipuri" },
+        { q: "What is your favourite?", a: "Blackcurrant 🍨", b: "Vanilla 🍨" },
+        { q: "What is your favourite?", a: "Spicy dishes", b: "Sweet dishes" },
+        { q: "What is your favourite?", a: "Butterscotch Icecream", b: "Chocolate Icecream" },
+        { q: "What is your favourite?", a: "Kitkat", b: "Dairy milk Hazelnut" }
+    ];
+
+    const riddlesList = [
+        { text: "I can hold moments forever, Yet I'm not alive. Open me and memories return. What am I?", format: "P_O_O A_B_M", answer: "PHOTO ALBUM", sec: 5 },
+        { text: "I follow you everywhere, But disappear in darkness. What am I?", format: "SH_D_W", answer: "SHADOW", sec: 5 },
+        { text: "I have keys but no locks, Space but no rooms, Once you enter you can only escape. What am I?", format: "K_Y B___D", answer: "KEYBOARD", sec: 3 }
+    ];
+
+    const noContextMsgs = ["Wait a minute.....", "Did I forget something.....", "Give me a moment.....", "Is it Your Birthday 🎂 today.....", "Really.....", "Sorry I didn't wish you earlier....."];
+    let noCtxIndex = 0;
+
+    // ========== FUNCTIONS ==========
+    function playPop() { let a = document.getElementById('popSound'); if(a) { a.currentTime = 0; a.play().catch(e=>{}); } }
+    function playGift() { let a = document.getElementById('giftSound'); if(a) { a.currentTime = 0; a.play().catch(e=>{}); } }
+
+    function startMusic() {
+        if(!music) music = document.getElementById('bgMusic');
+        if(music && musicEnabled) { music.volume = 0.3; music.play().catch(e=>console.log('music')); }
+    }
+    function toggleMusic() { musicEnabled = !musicEnabled; let btn = document.getElementById('musicCtrl'); if(music) { if(musicEnabled) { music.play(); btn.innerHTML = '🔊'; } else { music.pause(); btn.innerHTML = '🔇'; } } }
+
+    document.body.addEventListener('click', function firstClick() {
+        if(userName && userName.toLowerCase() === 'shweta') startMusic();
+        document.body.removeEventListener('click', firstClick);
+    });
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        currentPage = id;
+    }
+
+    function nextFromMailbox() { showPage('quotePage'); }
+
+    // NAME VALIDATION
+    function validateName() {
+        let name = document.getElementById('nameInput').value.trim();
+        if(!name) { alert('Enter your name'); return; }
+        userName = name;
+        if(userName.toLowerCase() === 'shweta') { showPage('mailboxPage'); startMusic(); }
+        else { document.getElementById('rejectMsg').innerHTML = `Welcome ${userName}`; showPage('reject1'); }
+    }
+
+    function nextReject() { rejectStep++; if(rejectStep===2) showPage('reject2'); else if(rejectStep===3) showPage('reject3'); else closeSite(); }
+    function closeSite() { document.body.innerHTML = '<div style="text-align:center; padding:60px; color:white;"><h1>Goodbye!</h1></div>'; }
+
+    // MAILBOX
+    function openMailbox() {
+        playPop();
+        let letter = document.createElement('div');
+        letter.textContent = '✉️';
+        letter.style.fontSize = '3rem';
+        letter.style.animation = 'fly 1s forwards';
+        document.getElementById('letterArea').appendChild(letter);
+        setTimeout(() => letter.remove(), 1000);
+        for(let i=0;i<40;i++) {
+            let p = document.createElement('div');
+            p.textContent = '🌹';
+            p.style.position = 'absolute';
+            p.style.fontSize = '1.3rem';
+            let angle = Math.random() * Math.PI * 2;
+            let dist = 80 + Math.random() * 150;
+            p.style.animation = `burst 1s forwards`;
+            p.style.setProperty('--x', Math.cos(angle)*dist + 'px');
+            p.style.setProperty('--y', Math.sin(angle)*dist + 'px');
+            document.getElementById('petalArea').appendChild(p);
+            setTimeout(() => p.remove(), 1000);
+        }
+        document.getElementById('welcomeMsg').innerHTML = `Welcome ${userName}`;
+        document.getElementById('welcomeMsg').classList.remove('hidden');
+        document.getElementById('nextBtn').classList.remove('hidden');
+    }
+
+    // ADD CSS ANIMATIONS
+    let style = document.createElement('style');
+    style.textContent = `@keyframes fly { 0%{transform:translate(0,0); opacity:1;} 100%{transform:translate(150px,-200px); opacity:0;} }
+    @keyframes burst { 0%{transform:scale(0) translate(0,0); opacity:1;} 100%{transform:scale(1.2) translate(var(--x), var(--y)); opacity:0;} }`;
+    document.head.appendChild(style);
+
+    // QUIZ
+    function startQuiz() { quizSection = 'another'; qIndex = 0; anotherAnswers = []; foodAnswers = []; renderQuiz(); }
+
+    function renderQuiz() {
+        let cont = document.getElementById('dynamic');
+        if(quizSection === 'another' && qIndex < anotherQ.length) {
+            let q = anotherQ[qIndex];
+            cont.innerHTML = `<div class="page active"><h2>Another Type</h2><div style="color:#FFD700; font-size:1.3rem;">${q.q}</div><div class="option" onclick="answerQuiz('${q.a.replace(/'/g,"\\'")}')">${q.a}</div><div class="option" onclick="answerQuiz('${q.b.replace(/'/g,"\\'")}')">${q.b}</div><div class="timer">Time: <span id="qt">10</span> sec</div></div>`;
+            startTimer(10, () => answerQuiz(null));
+        }
+        else if(quizSection === 'another' && qIndex >= anotherQ.length) { quizSection = 'food'; qIndex = 0; renderQuiz(); }
+        else if(quizSection === 'food' && qIndex < foodQ.length) {
+            let q = foodQ[qIndex];
+            cont.innerHTML = `<div class="page active"><h2>Food</h2><div style="color:#FFD700; font-size:1.3rem;">${q.q}</div><div class="option" onclick="answerQuiz('${q.a.replace(/'/g,"\\'")}')">${q.a}</div><div class="option" onclick="answerQuiz('${q.b.replace(/'/g,"\\'")}')">${q.b}</div><div class="timer">Time: <span id="qt">10</span> sec</div></div>`;
+            startTimer(10, () => answerQuiz(null));
+        }
+        else { showPersonalized(); }
+    }
+
+    function startTimer(sec, onEnd) {
+        if(quizTimer) clearInterval(quizTimer);
+        let time = sec;
+        let el = document.getElementById('qt');
+        quizTimer = setInterval(() => { time--; if(el) el.innerText = time; if(time <= 0) { clearInterval(quizTimer); onEnd(); } }, 1000);
+    }
+
+    function answerQuiz(choice) {
+        if(quizTimer) clearInterval(quizTimer);
+        if(quizSection === 'another') anotherAnswers.push(choice || 'No answer');
+        else foodAnswers.push(choice || 'No answer');
+        qIndex++;
+        renderQuiz();
+    }
+
+    function showPersonalized() {
+        let choice = foodAnswers[4] || 'Kitkat';
+        document.getElementById('dynamic').innerHTML = `<div class="page active"><h2>💬</h2><div style="color:#FFD700;">I know you have chosen ${choice}.</div><button onclick="showChallenge()">Next →</button></div>`;
+    }
+
+    function showChallenge() {
+        let choice = foodAnswers[4] || 'Kitkat';
+        document.getElementById('dynamic').innerHTML = `<div class="page active"><h2>🎯 Challenge</h2><div style="color:#FFD700;">I have a challenge. If you answer correctly, I will send you 5 ${choice} 🍫 for each correct answer.</div><button onclick="startRiddles()">Begin →</button></div>`;
+    }
+
+    // RIDDLES
+    function startRiddles() { currentRiddle = 0; totalCorrect = 0; showRiddle(); }
+
+    function showRiddle() {
+        if(currentRiddle >= riddlesList.length) { showGifts(); return; }
+        let r = riddlesList[currentRiddle];
+        document.getElementById('dynamic').innerHTML = `<div class="page active"><h2>🔐 Riddle ${currentRiddle+1}</h2><div style="color:#FFD700;">${r.text}</div><p style="color:white;">Format: ${r.format}</p><input type="text" id="riddleAns" style="width:90%; padding:12px; border-radius:50px; border:none; text-align:center; margin:15px auto; display:block;"><div class="kitkat" id="kitkat">🍫🍫🍫</div><button onclick="checkRiddle()">Submit</button></div>`;
+        let pcs = 3;
+        let kit = document.getElementById('kitkat');
+        if(riddleTimer) clearInterval(riddleTimer);
+        riddleTimer = setInterval(() => { pcs--; if(kit) kit.innerText = '🍫'.repeat(pcs); if(pcs <= 0) { clearInterval(riddleTimer); alert("You are so dumb 😂😂"); currentRiddle++; showRiddle(); } }, r.sec * 1000);
+    }
+
+    function checkRiddle() {
+        let ans = document.getElementById('riddleAns').value.trim().toUpperCase();
+        let correct = riddlesList[currentRiddle].answer;
+        if(ans === correct) { totalCorrect++; alert("Smart!"); } else { alert("Wrong answer!"); }
+        if(riddleTimer) clearInterval(riddleTimer);
+        currentRiddle++;
+        showRiddle();
+    }
+
+    // GIFT BOXES
+    function showGifts() {
+        let allCorrect = (totalCorrect === riddlesList.length);
+        let foodChoice = foodAnswers[4] || 'Kitkat';
+        document.getElementById('dynamic').innerHTML = `<div class="page active"><h2>🎁 Gift Boxes 🎈</h2><div class="gift-grid" id="giftGrid"></div><div id="giftMsg" class="message-area"></div></div>`;
+        let grid = document.getElementById('giftGrid');
+        for(let i=0;i<7;i++) {
+            let g = document.createElement('div');
+            g.className = 'gift-item';
+            g.innerHTML = `<div>🎈</div><div class="gift-icon">🎁</div>`;
+            g.onclick = () => openGift(i);
+            grid.appendChild(g);
+        }
+        giftOpened = [];
+        window.giftState = { allCorrect, foodChoice, correctCount: totalCorrect };
+    }
+
+    function openGift(idx) {
+        if(giftOpened.includes(idx)) return;
+        playGift();
+        giftOpened.push(idx);
+        let msgDiv = document.getElementById('giftMsg');
+        let msg = '';
+        if(giftOpened.length === 1) msg = `You have answered ${window.giftState.correctCount} questions correctly.`;
+        else if(giftOpened.length === 2) msg = `I will send you 5 ${window.giftState.foodChoice} 🍫 for each correct question.`;
+        else if(giftOpened.length === 3) msg = window.giftState.allCorrect ? "You are damn smart 🤓" : "But still, you are too slow 😂😂";
+        if(msg) msgDiv.innerHTML += `<p>🎁 ${msg}</p>`;
+        if(giftOpened.length >= 3) setTimeout(() => showFinalQuote(), 1000);
+    }
+
+    function showFinalQuote() {
+        document.getElementById('dynamic').innerHTML = `<div class="page active"><div class="quote-text">"Wherever life takes you, always remember: you are loved, you are enough, and you are a beautiful soul."</div><button onclick="startNoContext()">Next →</button></div>`;
+    }
+
+    // NO CONTEXT
+    function startNoContext() { noCtxIndex = 0; showNoContext(); }
+    function showNoContext() {
+        if(noCtxIndex >= noContextMsgs.length) { showHugeGift(); return; }
+        document.getElementById('dynamic').innerHTML = `<div class="page active"><h2>🤔</h2><div style="color:#FFD700; font-size:1.5rem;">${noContextMsgs[noCtxIndex]}</div><button onclick="nextNoContext()">Next →</button></div>`;
+    }
+    function nextNoContext() { noCtxIndex++; showNoContext(); }
+
+    function showHugeGift() {
+        document.getElementById('dynamic').innerHTML = `<div class="page active"><div style="font-size:5rem; cursor:pointer;" onclick="showPuzzle()">🎁🎈</div><p style="color:#FFD700;">Click to open</p></div>`;
+    }
+
+    // PUZZLE
+    function showPuzzle() {
+        playPop();
+        document.getElementById('dynamic').innerHTML = `<div class="page active"><h2>🧩 Solve the Puzzle</h2><div class="puzzle-grid" id="puzzleGrid"></div><div id="puzzleMsg"></div></div>`;
+        initPuzzle();
+    }
+
+    function initPuzzle() {
+        pieces = Array.from({length:16}, (_,i)=>i);
+        for(let i=pieces.length-1;i>0;i--) { let j = Math.floor(Math.random()*(i+1)); [pieces[i],pieces[j]] = [pieces[j],pieces[i]]; }
+        emptyIndex = pieces.indexOf(15);
+        renderPuzzle();
+    }
+
+    function renderPuzzle() {
+        let grid = document.getElementById('puzzleGrid');
+        if(!grid) return;
+        grid.innerHTML = '';
+        for(let i=0;i<pieces.length;i++) {
+            let piece = document.createElement('div');
+            piece.className = 'puzzle-piece';
+            if(pieces[i] === 15) piece.classList.add('empty');
+            else {
+                let row = Math.floor(pieces[i]/4);
+                let col = pieces[i]%4;
+                piece.style.backgroundImage = `url('shweta.jpg')`;
+                piece.style.backgroundSize = '400% 400%';
+                piece.style.backgroundPosition = `${col*33.33}% ${row*33.33}%`;
+            }
+            piece.onclick = () => tryMove(i);
+            grid.appendChild(piece);
+        }
+    }
+
+    function tryMove(idx) {
+        if(puzzleSolved) return;
+        let clickRow = Math.floor(idx/4);
+        let clickCol = idx%4;
+        let emptyRow = Math.floor(emptyIndex/4);
+        let emptyCol = emptyIndex%4;
+        if(Math.abs(clickRow-emptyRow) + Math.abs(clickCol-emptyCol) === 1) {
+            [pieces[idx], pieces[emptyIndex]] = [pieces[emptyIndex], pieces[idx]];
+            emptyIndex = idx;
+            renderPuzzle();
+            if(pieces.every((v,i)=> v===i)) {
+                puzzleSolved = true;
+                document.getElementById('puzzleMsg').innerHTML = '<p style="color:#FFD700;">🎉 Puzzle solved! 🎉</p>';
+                playGift();
+                setTimeout(() => showCake(), 1500);
+            }
+        }
+    }
+
+    // CAKE
+    function showCake() {
+        playPop();
+        document.getElementById('dynamic').innerHTML = `<div class="page active"><div id="cakeArea" style="height:250px; position:relative;"></div><div id="cakeMsg" style="color:#FFD700; font-size:1.5rem;"></div></div>`;
+        let layers = 0;
+        let intv = setInterval(() => {
+            let cake = document.createElement('div');
+            cake.textContent = '🎂';
+            cake.style.position = 'absolute';
+            cake.style.left = '50%';
+            cake.style.transform = 'translateX(-50%)';
+            cake.style.fontSize = '3rem';
+            cake.style.animation = 'fallCake 1.4s forwards';
+            document.getElementById('cakeArea').appendChild(cake);
+            setTimeout(() => cake.remove(), 1400);
+            layers++;
+            if(layers >= 6) { clearInterval(intv); document.getElementById('cakeMsg').innerHTML = "Happy Birthday 🎂 Shwetaaaaaa Sister"; }
+        }, 800);
+        let s = document.createElement('style');
+        s.textContent = `@keyframes fallCake { 0%{top:-80px; opacity:0;} 100%{top:180px; opacity:1;} }`;
+        document.head.appendChild(s);
+    }
+</script>
+</body>
+</html>
+
