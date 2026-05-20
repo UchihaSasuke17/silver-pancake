@@ -67,6 +67,12 @@ function playGiftSound() {
     if (gift) { gift.currentTime = 0; gift.play().catch(e => console.log('Gift error')); }
 }
 
+function playSuccessSound() {
+    if (!musicEnabled) return;
+    const success = document.getElementById('successSound');
+    if (success) { success.currentTime = 0; success.play().catch(e => console.log('Success error')); }
+}
+
 function toggleMusic() {
     musicEnabled = !musicEnabled;
     const icon = document.querySelector('.music-icon');
@@ -119,12 +125,20 @@ function nextPage() {
 
 function closeSite() { document.body.innerHTML = '<div style="text-align:center; padding:60px; color:white;"><h1>Goodbye!</h1></div>'; }
 
+// ==================== FIXED: validateName FUNCTION ====================
 function validateName() {
     const name = document.getElementById('nameInput').value.trim();
-    if (!name) { alert('Please enter your name'); return; }
+    if (!name) {
+        alert('Please enter your name');
+        return;
+    }
     userName = name;
-    if (userName.toLowerCase() === 'shweta') showPage('mailboxPage');
-    else { document.getElementById('rejectNameMsg').innerHTML = `Welcome ${userName}`; showPage('reject1'); }
+    if (userName.toLowerCase() === 'shweta') {
+        showPage('mailboxPage');
+    } else {
+        document.getElementById('rejectNameMsg').innerHTML = `Welcome ${userName}`;
+        showPage('reject1');
+    }
 }
 
 function nextReject() { rejectStep++; if (rejectStep === 2) showPage('reject2'); else if (rejectStep === 3) showPage('reject3'); else closeSite(); }
@@ -167,13 +181,13 @@ function renderQuiz() {
     if (!container) return;
     if (currentQuizSection === 'another' && currentQuestionIndex < anotherQuestions.length) {
         const q = anotherQuestions[currentQuestionIndex];
-        container.innerHTML = `<div class="page active"><div class="page-header"><span class="page-number">📝 Another Type</span></div><div class="question-text">${q.q}</div><div class="options-container"><div class="option-card" onclick="answerQuiz('${q.a.replace(/'/g, "\\'")}')">${q.a}</div><div class="option-card" onclick="answerQuiz('${q.b.replace(/'/g, "\\'")}')">${q.b}</div></div><div class="timer-display">⏱️ Time: <span id="quizTimer">10</span> sec</div></div>`;
+        container.innerHTML = `<div class="page active" style="display:block"><div class="page-header"><span class="page-number">📝 Another Type</span></div><div class="question-text">${q.q}</div><div class="options-container"><div class="option-card" onclick="answerQuiz('${q.a.replace(/'/g, "\\'")}')">${q.a}</div><div class="option-card" onclick="answerQuiz('${q.b.replace(/'/g, "\\'")}')">${q.b}</div></div><div class="timer-display">⏱️ Time: <span id="quizTimer">10</span> sec</div></div>`;
         startQuizTimer(10, () => answerQuiz(null));
     } else if (currentQuizSection === 'another' && currentQuestionIndex >= anotherQuestions.length) {
         currentQuizSection = 'food'; currentQuestionIndex = 0; renderQuiz();
     } else if (currentQuizSection === 'food' && currentQuestionIndex < foodQuestions.length) {
         const q = foodQuestions[currentQuestionIndex];
-        container.innerHTML = `<div class="page active"><div class="page-header"><span class="page-number">🍕 Food</span></div><div class="question-text">${q.q}</div><div class="options-container"><div class="option-card" onclick="answerQuiz('${q.a.replace(/'/g, "\\'")}')">${q.a}</div><div class="option-card" onclick="answerQuiz('${q.b.replace(/'/g, "\\'")}')">${q.b}</div></div><div class="timer-display">⏱️ Time: <span id="quizTimer">10</span> sec</div></div>`;
+        container.innerHTML = `<div class="page active" style="display:block"><div class="page-header"><span class="page-number">🍕 Food</span></div><div class="question-text">${q.q}</div><div class="options-container"><div class="option-card" onclick="answerQuiz('${q.a.replace(/'/g, "\\'")}')">${q.a}</div><div class="option-card" onclick="answerQuiz('${q.b.replace(/'/g, "\\'")}')">${q.b}</div></div><div class="timer-display">⏱️ Time: <span id="quizTimer">10</span> sec</div></div>`;
         startQuizTimer(10, () => answerQuiz(null));
     } else { showPersonalizedMessage(); }
 }
@@ -196,13 +210,13 @@ function answerQuiz(choice) {
 function showPersonalizedMessage() {
     const foodChoice = foodAnswers[4] || 'Kitkat';
     const container = document.getElementById('dynamicContent');
-    container.innerHTML = `<div class="page active"><div class="page-header"><span class="page-number">💬</span></div><div class="question-text">I know you have chosen ${foodChoice}.</div><button class="glow-btn" onclick="showChallengePage()">Next →</button></div>`;
+    container.innerHTML = `<div class="page active" style="display:block"><div class="page-header"><span class="page-number">💬</span></div><div class="question-text">I know you have chosen ${foodChoice}.</div><button class="glow-btn" onclick="showChallengePage()">Next →</button></div>`;
 }
 
 function showChallengePage() {
     const foodChoice = foodAnswers[4] || 'Kitkat';
     const container = document.getElementById('dynamicContent');
-    container.innerHTML = `<div class="page active"><div class="page-header"><span class="page-number">🎯 Challenge</span></div><div class="question-text">I have a challenge for you. If you answer correctly, I will send you 5 ${foodChoice} 🍫 for each correct answer.</div><button class="glow-btn" onclick="startRiddles()">Begin →</button></div>`;
+    container.innerHTML = `<div class="page active" style="display:block"><div class="page-header"><span class="page-number">🎯 Challenge</span></div><div class="question-text">I have a challenge for you. If you answer correctly, I will send you 5 ${foodChoice} 🍫 for each correct answer.</div><button class="glow-btn" onclick="startRiddles()">Begin →</button></div>`;
 }
 
 function startRiddles() { currentRiddle = 0; totalCorrect = 0; showRiddle(); }
@@ -211,7 +225,7 @@ function showRiddle() {
     if (currentRiddle >= riddles.length) { showGiftBoxes(); return; }
     const r = riddles[currentRiddle];
     const container = document.getElementById('dynamicContent');
-    container.innerHTML = `<div class="page active"><div class="page-header"><span class="page-number">🔐 Riddle ${currentRiddle+1}</span></div><div class="question-text">${r.text}</div><p style="color:white;">Format: ${r.format}</p><input type="text" id="riddleAnswer" class="riddle-input" placeholder="Type answer..."><div class="kitkat-timer" id="kitkatTimer">🍫🍫🍫</div><button class="glow-btn" onclick="checkRiddle()">Submit</button></div>`;
+    container.innerHTML = `<div class="page active" style="display:block"><div class="page-header"><span class="page-number">🔐 Riddle ${currentRiddle+1}</span></div><div class="question-text">${r.text}</div><p style="color:white;">Format: ${r.format}</p><input type="text" id="riddleAnswer" class="riddle-input" placeholder="Type answer..."><div class="kitkat-timer" id="kitkatTimer">🍫🍫🍫</div><button class="glow-btn" onclick="checkRiddle()">Submit</button></div>`;
     let pieces = 3;
     const kitkatEl = document.getElementById('kitkatTimer');
     if (riddleTimer) clearInterval(riddleTimer);
@@ -234,7 +248,7 @@ function showGiftBoxes() {
     const allCorrect = (totalCorrect === riddles.length);
     const foodChoice = foodAnswers[4] || 'Kitkat';
     const container = document.getElementById('dynamicContent');
-    container.innerHTML = `<div class="page active"><div class="page-header"><span class="page-number">🎁 Gift Boxes</span></div><div class="gifts-grid" id="giftsGrid">${Array(7).fill(0).map((_, i) => `<div class="balloon-gift" onclick="openGift(${i})"><div class="balloon-icon">🎈</div><div class="gift-icon">🎁</div></div>`).join('')}</div><div id="giftMsg" class="gift-message-area"></div></div>`;
+    container.innerHTML = `<div class="page active" style="display:block"><div class="page-header"><span class="page-number">🎁 Gift Boxes</span></div><div class="gifts-grid" id="giftsGrid">${Array(7).fill(0).map((_, i) => `<div class="balloon-gift" onclick="openGift(${i})"><div class="balloon-icon">🎈</div><div class="gift-icon">🎁</div></div>`).join('')}</div><div id="giftMsg" class="gift-message-area"></div></div>`;
     giftState = { opened: [], allCorrect, foodChoice, correctCount: totalCorrect };
 }
 
@@ -253,7 +267,7 @@ function openGift(idx) {
 
 function showFinalQuote() {
     const container = document.getElementById('dynamicContent');
-    container.innerHTML = `<div class="page active"><div class="page-header"><span class="page-number">✨</span></div><div class="quote-card"><p class="beautiful-quote">"Wherever life takes you, always remember: you are loved, you are enough, and you are a beautiful soul."</p></div><button class="glow-btn" onclick="startNoContext()">Next →</button></div>`;
+    container.innerHTML = `<div class="page active" style="display:block"><div class="page-header"><span class="page-number">✨</span></div><div class="quote-card"><p class="beautiful-quote">"Wherever life takes you, always remember: you are loved, you are enough, and you are a beautiful soul."</p></div><button class="glow-btn" onclick="startNoContext()">Next →</button></div>`;
 }
 
 function startNoContext() { noContextIndex = 0; showNoContext(); }
@@ -261,17 +275,17 @@ function startNoContext() { noContextIndex = 0; showNoContext(); }
 function showNoContext() {
     if (noContextIndex >= noContextMessages.length) { showHugeGiftBox(); return; }
     const container = document.getElementById('dynamicContent');
-    container.innerHTML = `<div class="page active"><div class="page-header"><span class="page-number">🤔</span></div><div class="no-context-card">${noContextMessages[noContextIndex]}</div><button class="glow-btn" onclick="nextNoContext()">Next →</button></div>`;
+    container.innerHTML = `<div class="page active" style="display:block"><div class="page-header"><span class="page-number">🤔</span></div><div class="no-context-card">${noContextMessages[noContextIndex]}</div><button class="glow-btn" onclick="nextNoContext()">Next →</button></div>`;
 }
 
 function nextNoContext() { noContextIndex++; showNoContext(); }
 
 function showHugeGiftBox() {
     const container = document.getElementById('dynamicContent');
-    container.innerHTML = `<div class="page active"><div class="page-header"><span class="page-number">🎁</span></div><div style="font-size:5rem; text-align:center; cursor:pointer;" onclick="showPuzzle()">🎁🎈</div><p style="color:#FFD700; text-align:center;">Click to open</p></div>`;
+    container.innerHTML = `<div class="page active" style="display:block"><div class="page-header"><span class="page-number">🎁</span></div><div style="font-size:5rem; text-align:center; cursor:pointer;" onclick="showPuzzle()">🎁🎈</div><p style="color:#FFD700; text-align:center;">Click to open</p></div>`;
 }
 
-function showPuzzle() { playPopSound(); const container = document.getElementById('dynamicContent'); container.innerHTML = `<div class="page active"><div class="page-header"><span class="page-number">🧩 Puzzle</span></div><div class="puzzle-container"><div class="puzzle-grid" id="puzzleGrid"></div></div><div id="puzzleMsg" class="puzzle-message"></div></div>`; initPuzzle(); }
+function showPuzzle() { playPopSound(); const container = document.getElementById('dynamicContent'); container.innerHTML = `<div class="page active" style="display:block"><div class="page-header"><span class="page-number">🧩 Puzzle</span></div><div class="puzzle-container"><div class="puzzle-grid" id="puzzleGrid"></div></div><div id="puzzleMsg" class="puzzle-message"></div></div>`; initPuzzle(); }
 
 const imageUrl = 'shweta.png';
 let pieces = [];
@@ -306,7 +320,7 @@ function tryMove(idx) {
 function showCakeAnimation() {
     playPopSound();
     const container = document.getElementById('dynamicContent');
-    container.innerHTML = `<div class="page active"><div class="cake-animation-area" id="cakeArea"></div><div id="cakeMsg" class="final-birthday-message"></div></div>`;
+    container.innerHTML = `<div class="page active" style="display:block"><div class="cake-animation-area" id="cakeArea"></div><div id="cakeMsg" class="final-birthday-message"></div></div>`;
     let layers = 0;
     const interval = setInterval(() => {
         const cakeDiv = document.getElementById('cakeArea');
@@ -318,5 +332,4 @@ function showCakeAnimation() {
         layers++;
         if (layers >= 6) { clearInterval(interval); document.getElementById('cakeMsg').innerHTML = "Happy Birthday 🎂 Shwetaaaaaa Sister"; }
     }, 800);
-          }
-
+}
