@@ -1,428 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthday Surprise</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', 'Segoe UI', sans-serif;
-        }
-        body {
-            background: linear-gradient(135deg, #0a0a2a, #1a1a3e);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 550px;
-            width: 100%;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(12px);
-            border-radius: 40px;
-            padding: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-        }
-        .page { display: none; text-align: center; }
-        .page.active { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        h1 { font-size: 2rem; color: white; margin-bottom: 15px; }
-        h2 { color: #FFD700; margin-bottom: 20px; font-size: 1.5rem; }
-        .subtitle { color: rgba(255,255,255,0.7); margin-bottom: 30px; }
-        input { width: 100%; padding: 15px; border-radius: 60px; border: none; text-align: center; font-size: 1rem; }
-        button { background: linear-gradient(95deg, #ff6b6b, #ff8e8e); border: none; padding: 14px 28px; border-radius: 60px; font-size: 1rem; font-weight: 600; color: white; cursor: pointer; width: 100%; margin-top: 20px; transition: 0.3s; }
-        button:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255,107,107,0.4); }
-        .option-card { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,215,0,0.3); border-radius: 60px; padding: 14px; margin: 10px 0; cursor: pointer; color: white; transition: 0.3s; }
-        .option-card:hover { background: rgba(255,215,0,0.2); transform: scale(1.02); }
-        .timer { color: #FFD700; margin: 15px 0; }
-        .kitkat { font-size: 2rem; letter-spacing: 8px; margin: 15px 0; }
-        .riddle-input { width: 90%; padding: 12px; font-size: 1rem; text-align: center; border-radius: 60px; border: none; margin: 15px auto; display: block; }
-        .gifts-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 20px 0; }
-        .gift { text-align: center; cursor: pointer; transition: 0.3s; }
-        .gift:hover { transform: translateY(-10px); }
-        .gift-icon { font-size: 2rem; background: linear-gradient(135deg, #ff69b4, #ff1493); border-radius: 15px; padding: 15px; }
-        .puzzle-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; background: #2a2a4a; border: 3px solid #FFD700; border-radius: 12px; overflow: hidden; aspect-ratio: 1 / 1; margin: 20px 0; }
-        .puzzle-piece { cursor: pointer; transition: 0.15s; background-size: 400% 400%; }
-        .puzzle-piece:hover { transform: scale(0.97); }
-        .empty-piece { background: #1a1a3a !important; position: relative; }
-        .empty-piece::after { content: "⬜"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.8rem; opacity: 0.5; }
-        .quote-card { background: rgba(255,255,255,0.05); border-radius: 30px; padding: 20px; margin: 20px 0; }
-        .beautiful-quote { font-size: 1.2rem; line-height: 1.6; color: #f0e6ff; font-style: italic; }
-        .mailbox { font-size: 5rem; cursor: pointer; transition: 0.3s; }
-        .mailbox:hover { transform: scale(1.05); }
-        .hidden { display: none; }
-        .music-control { position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.6); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="container" id="app">
+<div class="container">
 
-    <!-- PAGE 1: NAME INPUT -->
+    <!-- PAGE 1 -->
     <div id="page1" class="page active">
-        <h1>✨ Birthday Surprise ✨</h1>
-        <p class="subtitle">Enter your name</p>
-        <input type="text" id="nameInput" placeholder="Type your name...">
-        <button onclick="validateName()">Continue →</button>
+        <h1>🎉 Birthday Surprise 🎉</h1>
+        <input id="nameInput" placeholder="Enter name">
+        <button onclick="validateName()">Continue</button>
     </div>
 
-    <!-- REJECTION PAGES -->
-    <div id="reject1" class="page"><div id="rejectMailbox">📬</div><p id="rejectNameMsg"></p><button onclick="nextReject()">Next →</button></div>
-    <div id="reject2" class="page"><h2>Are you Shweta?? Is it Your Birthday Today??</h2><button onclick="nextReject()">Next →</button></div>
-    <div id="reject3" class="page"><h2>I don't think so</h2><button onclick="closeSite()">Close</button></div>
+    <!-- REJECT -->
+    <div id="reject1" class="page">
+        <p id="rejectMsg"></p>
+        <button onclick="nextReject()">Next</button>
+    </div>
 
-    <!-- PAGE 2: MAILBOX -->
+    <div id="reject2" class="page">
+        <h2>Are you sure?</h2>
+        <button onclick="nextReject()">Next</button>
+    </div>
+
+    <div id="reject3" class="page">
+        <h2>Access Denied</h2>
+        <button onclick="closeSite()">Close</button>
+    </div>
+
+    <!-- MAILBOX -->
     <div id="mailboxPage" class="page">
         <div class="mailbox" onclick="openMailbox()">📬</div>
         <div id="letterArea"></div>
         <div id="petalArea"></div>
-        <p id="welcomeName" class="hidden"></p>
-        <button id="nextMailbox" class="hidden" onclick="nextPage()">Continue →</button>
+        <p id="welcomeMsg"></p>
+        <button onclick="nextFromMailbox()">Continue</button>
     </div>
 
-    <!-- PAGE 3: QUOTE -->
+    <!-- QUOTE -->
     <div id="quotePage" class="page">
-        <div class="quote-card"><p class="beautiful-quote">"Like stars that shine brightest in the darkest night, you have your own ways to make things beautiful."</p></div>
-        <button onclick="startQuizFromQuote()">Next →</button>
+        <h2 class="quote">"You are special 💖"</h2>
+        <button onclick="startQuiz()">Start</button>
     </div>
 
-    <!-- DYNAMIC CONTENT -->
-    <div id="dynamicContent"></div>
+    <!-- DYNAMIC -->
+    <div id="dynamic"></div>
 
 </div>
 
-<div class="music-control" onclick="toggleMusic()">🔊</div>
+<audio id="bgMusic" loop>
+<source src="https://cdn.pixabay.com/audio/2022/03/10/audio.mp3">
+</audio>
 
-<audio id="bgMusic" loop><source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8f7b6c6.mp3?filename=happy-birthday-8bit-108744.mp3" type="audio/mpeg"></audio>
-<audio id="popSound"><source src="https://www.soundjay.com/misc/sounds/pop-39248.mp3" type="audio/mpeg"></audio>
-<audio id="giftSound"><source src="https://www.soundjay.com/misc/sounds/gift-opening-29572.mp3" type="audio/mpeg"></audio>
+<audio id="popSound"></audio>
+<audio id="giftSound"></audio>
 
-<script>
-    // ==================== MUSIC ====================
-    let bgMusic = null;
-    let musicEnabled = true;
-    let musicStarted = false;
-
-    function startMusic() {
-        if (musicStarted) return;
-        bgMusic = document.getElementById('bgMusic');
-        if (bgMusic) { bgMusic.volume = 0.3; bgMusic.play().catch(e => console.log('Music start')); musicStarted = true; }
-    }
-
-    function toggleMusic() {
-        if (!bgMusic) bgMusic = document.getElementById('bgMusic');
-        if (musicEnabled) { bgMusic.pause(); musicEnabled = false; document.querySelector('.music-control').innerHTML = '🔇'; }
-        else { bgMusic.play(); musicEnabled = true; document.querySelector('.music-control').innerHTML = '🔊'; }
-    }
-
-    function playPop() { let p = document.getElementById('popSound'); if(p) { p.currentTime = 0; p.play().catch(e=>{}); } }
-    function playGift() { let g = document.getElementById('giftSound'); if(g) { g.currentTime = 0; g.play().catch(e=>{}); } }
-
-    // ==================== DATA ====================
-    let userName = '';
-    let currentPage = 'page1';
-    let rejectStep = 1;
-    let anotherAnswers = [];
-    let foodAnswers = [];
-    let totalCorrect = 0;
-    let noContextIndex = 0;
-    let currentQuiz = null;
-    let qIndex = 0;
-    let timerInt = null;
-    let riddleInt = null;
-    let currentRiddle = 0;
-    let giftState = { opened: [], allCorrect: false, foodChoice: '', correctCount: 0 };
-    let puzzleSolved = false;
-    let pieces = [];
-    let emptyIndex = 15;
-
-    const anotherQ = [
-        { q: "What would you prefer?", a: "Early Morning Vibes", b: "Midnight Vibes" },
-        { q: "What would you prefer?", a: "Like to be Alone", b: "Like to be with people" },
-        { q: "What would you prefer?", a: "Spending Summer on a beach", b: "Long ride on a bike at night" },
-        { q: "What would you prefer?", a: "Cooking food alone", b: "Cooking with friends around a bonfire at night" },
-        { q: "What would you prefer?", a: "Taking a walk alone at night", b: "Lying down and looking at the starry sky" }
-    ];
-
-    const foodQ = [
-        { q: "What is your favourite?", a: "Noodles", b: "Panipuri" },
-        { q: "What is your favourite?", a: "Blackcurrant 🍨", b: "Vanilla 🍨" },
-        { q: "What is your favourite?", a: "Spicy dishes", b: "Sweet dishes" },
-        { q: "What is your favourite?", a: "Butterscotch Icecream", b: "Chocolate Icecream" },
-        { q: "What is your favourite?", a: "Kitkat", b: "Dairy milk Hazelnut" }
-    ];
-
-    const riddlesList = [
-        { text: "I can hold moments forever, Yet I'm not alive. Open me and memories return. What am I?", format: "P_O_O A_B_M", answer: "PHOTO ALBUM", kitkatSec: 5 },
-        { text: "I follow you everywhere, But disappear in darkness. What am I?", format: "SH_D_W", answer: "SHADOW", kitkatSec: 5 },
-        { text: "I have keys but no locks, Space but no rooms, Once you enter you can only escape. What am I?", format: "K_Y B___D", answer: "KEYBOARD", kitkatSec: 3 }
-    ];
-
-    const giftMsgs = [
-        (c) => `You have answered ${c} questions correctly.`,
-        (o) => `I will send you 5 ${o} 🍫 for each correct question.`,
-        (a) => a ? "You are damn smart 🤓" : "But still, you are too slow 😂😂"
-    ];
-
-    const noContextMsgs = ["Wait a minute.....", "Did I forget something.....", "Give me a moment.....", "Is it Your Birthday 🎂 today.....", "Really.....", "Sorry I didn't wish you earlier....."];
-
-    // ==================== NAVIGATION ====================
-    function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); currentPage = id; }
-
-    function nextPage() {
-        if (currentPage === 'mailboxPage') showPage('quotePage');
-        else if (currentPage === 'quotePage') startQuizFromQuote();
-    }
-
-    function closeSite() { document.body.innerHTML = '<div style="text-align:center; padding:60px; color:white;"><h1>Goodbye!</h1></div>'; }
-
-    // ==================== NAME VALIDATION ====================
-    function validateName() {
-        let name = document.getElementById('nameInput').value.trim();
-        if (!name) { alert('Please enter your name'); return; }
-        userName = name;
-        if (userName.toLowerCase() === 'shweta') { showPage('mailboxPage'); startMusic(); }
-        else { document.getElementById('rejectNameMsg').innerHTML = `Welcome ${userName}`; showPage('reject1'); }
-    }
-
-    function nextReject() { rejectStep++; if (rejectStep === 2) showPage('reject2'); else if (rejectStep === 3) showPage('reject3'); else closeSite(); }
-
-    // ==================== MAILBOX ====================
-    function openMailbox() {
-        playPop();
-        let letterDiv = document.getElementById('letterArea');
-        let petalDiv = document.getElementById('petalArea');
-        let welcome = document.getElementById('welcomeName');
-        let nextBtn = document.getElementById('nextMailbox');
-        let letter = document.createElement('div');
-        letter.style.fontSize = '3rem';
-        letter.style.animation = 'fly 1s ease-out forwards';
-        letter.textContent = '✉️';
-        letterDiv.appendChild(letter);
-        setTimeout(() => {
-            letter.remove();
-            welcome.textContent = `Welcome ${userName}`;
-            welcome.classList.remove('hidden');
-            for (let i = 0; i < 40; i++) {
-                let p = document.createElement('div');
-                p.textContent = '🌹';
-                p.style.position = 'absolute';
-                p.style.fontSize = '1.3rem';
-                let angle = Math.random() * Math.PI * 2;
-                let dist = 80 + Math.random() * 150;
-                p.style.animation = `burst 1s ease-out forwards`;
-                p.style.setProperty('--x', Math.cos(angle) * dist + 'px');
-                p.style.setProperty('--y', Math.sin(angle) * dist + 'px');
-                petalDiv.appendChild(p);
-                setTimeout(() => p.remove(), 1000);
-            }
-            nextBtn.classList.remove('hidden');
-        }, 800);
-    }
-
-    // ==================== QUIZ ====================
-    function startQuizFromQuote() {
-        currentQuiz = 'another';
-        qIndex = 0;
-        anotherAnswers = [];
-        foodAnswers = [];
-        renderQuiz();
-    }
-
-    function renderQuiz() {
-        let cont = document.getElementById('dynamicContent');
-        if (currentQuiz === 'another' && qIndex < anotherQ.length) {
-            let q = anotherQ[qIndex];
-            cont.innerHTML = `<div class="page active"><h2>📝 Another Type</h2><div class="question">${q.q}</div><div class="option-card" onclick="answerQuiz('${q.a.replace(/'/g, "\\'")}')">${q.a}</div><div class="option-card" onclick="answerQuiz('${q.b.replace(/'/g, "\\'")}')">${q.b}</div><div class="timer">⏱️ Time: <span id="qtimer">10</span> sec</div></div>`;
-            startTimer(10, () => answerQuiz(null));
-        } 
-        else if (currentQuiz === 'another' && qIndex >= anotherQ.length) { currentQuiz = 'food'; qIndex = 0; renderQuiz(); }
-        else if (currentQuiz === 'food' && qIndex < foodQ.length) {
-            let q = foodQ[qIndex];
-            cont.innerHTML = `<div class="page active"><h2>🍕 Food</h2><div class="question">${q.q}</div><div class="option-card" onclick="answerQuiz('${q.a.replace(/'/g, "\\'")}')">${q.a}</div><div class="option-card" onclick="answerQuiz('${q.b.replace(/'/g, "\\'")}')">${q.b}</div><div class="timer">⏱️ Time: <span id="qtimer">10</span> sec</div></div>`;
-            startTimer(10, () => answerQuiz(null));
-        }
-        else { showPersonalized(); }
-    }
-
-    function startTimer(sec, onTimeout) {
-        if (timerInt) clearInterval(timerInt);
-        let time = sec;
-        let el = document.getElementById('qtimer');
-        timerInt = setInterval(() => { time--; if (el) el.innerText = time; if (time <= 0) { clearInterval(timerInt); onTimeout(); } }, 1000);
-    }
-
-    function answerQuiz(choice) {
-        if (timerInt) clearInterval(timerInt);
-        if (currentQuiz === 'another') anotherAnswers.push(choice || 'No answer');
-        else foodAnswers.push(choice || 'No answer');
-        qIndex++;
-        renderQuiz();
-    }
-
-    function showPersonalized() {
-        let choice = foodAnswers[4] || 'Kitkat';
-        let cont = document.getElementById('dynamicContent');
-        cont.innerHTML = `<div class="page active"><h2>💬</h2><div class="question">I know you have chosen ${choice}.</div><button onclick="showChallenge()">Next →</button></div>`;
-    }
-
-    function showChallenge() {
-        let choice = foodAnswers[4] || 'Kitkat';
-        let cont = document.getElementById('dynamicContent');
-        cont.innerHTML = `<div class="page active"><h2>🎯 Challenge</h2><div class="question">I have a challenge for you. If you answer correctly, I will send you 5 ${choice} 🍫 for each correct answer.</div><button onclick="startRiddles()">Begin →</button></div>`;
-    }
-
-    // ==================== RIDDLES ====================
-    function startRiddles() { currentRiddle = 0; totalCorrect = 0; showRiddle(); }
-
-    function showRiddle() {
-        if (currentRiddle >= riddlesList.length) { showGiftBoxes(); return; }
-        let r = riddlesList[currentRiddle];
-        let cont = document.getElementById('dynamicContent');
-        cont.innerHTML = `<div class="page active"><h2>🔐 Riddle ${currentRiddle+1}</h2><div class="question">${r.text}</div><p>Format: ${r.format}</p><input type="text" id="riddleAns" class="riddle-input" placeholder="Type answer..."><div class="kitkat" id="kitkat">🍫🍫🍫</div><button onclick="checkRiddle()">Submit</button></div>`;
-        let pieces = 3;
-        let kit = document.getElementById('kitkat');
-        if (riddleInt) clearInterval(riddleInt);
-        riddleInt = setInterval(() => { pieces--; if (kit) kit.innerText = '🍫'.repeat(pieces); if (pieces <= 0) { clearInterval(riddleInt); alert("You are so dumb 😂😂"); currentRiddle++; showRiddle(); } }, r.kitkatSec * 1000);
-    }
-
-    function checkRiddle() {
-        let input = document.getElementById('riddleAns').value.trim().toUpperCase();
-        let correct = riddlesList[currentRiddle].answer;
-        if (input === correct) { totalCorrect++; alert("Smart!"); } else { alert("Wrong answer!"); }
-        if (riddleInt) clearInterval(riddleInt);
-        currentRiddle++;
-        showRiddle();
-    }
-
-    // ==================== GIFT BOXES ====================
-    function showGiftBoxes() {
-        let allCorrect = (totalCorrect === riddlesList.length);
-        let foodChoice = foodAnswers[4] || 'Kitkat';
-        let cont = document.getElementById('dynamicContent');
-        cont.innerHTML = `<div class="page active"><h2>🎁 Gift Boxes</h2><div class="gifts-grid" id="giftsGrid">${Array(7).fill(0).map((_, i) => `<div class="gift" onclick="openGift(${i})"><div>🎈</div><div class="gift-icon">🎁</div></div>`).join('')}</div><div id="giftMsg"></div></div>`;
-        giftState = { opened: [], allCorrect, foodChoice, correctCount: totalCorrect };
-    }
-
-    function openGift(idx) {
-        if (giftState.opened.includes(idx)) return;
-        playGift();
-        giftState.opened.push(idx);
-        let msgDiv = document.getElementById('giftMsg');
-        let msg = '';
-        if (giftState.opened.length === 1) msg = giftMsgs[0](giftState.correctCount);
-        else if (giftState.opened.length === 2) msg = giftMsgs[1](giftState.foodChoice);
-        else if (giftState.opened.length === 3) msg = giftMsgs[2](giftState.allCorrect);
-        if (msg) msgDiv.innerHTML += `<p>🎁 ${msg}</p>`;
-        if (giftState.opened.length >= 3) setTimeout(() => showFinalQuote(), 1000);
-    }
-
-    function showFinalQuote() {
-        let cont = document.getElementById('dynamicContent');
-        cont.innerHTML = `<div class="page active"><div class="quote-card"><p class="beautiful-quote">"Wherever life takes you, always remember: you are loved, you are enough, and you are a beautiful soul."</p></div><button onclick="startNoContext()">Next →</button></div>`;
-    }
-
-    // ==================== NO CONTEXT ====================
-    function startNoContext() { noContextIndex = 0; showNoContext(); }
-
-    function showNoContext() {
-        if (noContextIndex >= noContextMsgs.length) { showHugeGift(); return; }
-        let cont = document.getElementById('dynamicContent');
-        cont.innerHTML = `<div class="page active"><h2>🤔</h2><div style="font-size:1.5rem; color:#FFD700; margin:30px;">${noContextMsgs[noContextIndex]}</div><button onclick="nextNoContext()">Next →</button></div>`;
-    }
-
-    function nextNoContext() { noContextIndex++; showNoContext(); }
-
-    function showHugeGift() {
-        let cont = document.getElementById('dynamicContent');
-        cont.innerHTML = `<div class="page active"><div style="font-size:5rem; cursor:pointer;" onclick="showPuzzle()">🎁🎈</div><p style="color:#FFD700;">Click to open</p></div>`;
-    }
-
-    // ==================== PUZZLE ====================
-    function showPuzzle() {
-        playPop();
-        let cont = document.getElementById('dynamicContent');
-        cont.innerHTML = `<div class="page active"><h2>🧩 Solve the Puzzle</h2><div class="puzzle-grid" id="puzzleGrid"></div><div id="puzzleMsg"></div></div>`;
-        initPuzzle();
-    }
-
-    function initPuzzle() {
-        pieces = Array.from({ length: 16 }, (_, i) => i);
-        for (let i = pieces.length - 1; i > 0; i--) { let j = Math.floor(Math.random() * (i + 1)); [pieces[i], pieces[j]] = [pieces[j], pieces[i]]; }
-        emptyIndex = pieces.indexOf(15);
-        renderPuzzle();
-    }
-
-    function renderPuzzle() {
-        let grid = document.getElementById('puzzleGrid');
-        if (!grid) return;
-        grid.innerHTML = '';
-        for (let i = 0; i < pieces.length; i++) {
-            let piece = document.createElement('div');
-            piece.className = 'puzzle-piece';
-            if (pieces[i] === 15) piece.classList.add('empty-piece');
-            else {
-                let row = Math.floor(pieces[i] / 4);
-                let col = pieces[i] % 4;
-                piece.style.backgroundImage = `url('shweta.png')`;
-                piece.style.backgroundSize = '400% 400%';
-                piece.style.backgroundPosition = `${col * 33.33}% ${row * 33.33}%`;
-            }
-            piece.addEventListener('click', () => tryMove(i));
-            grid.appendChild(piece);
-        }
-    }
-
-    function tryMove(idx) {
-        if (puzzleSolved) return;
-        let clickRow = Math.floor(idx / 4);
-        let clickCol = idx % 4;
-        let emptyRow = Math.floor(emptyIndex / 4);
-        let emptyCol = emptyIndex % 4;
-        if (Math.abs(clickRow - emptyRow) + Math.abs(clickCol - emptyCol) === 1) {
-            [pieces[idx], pieces[emptyIndex]] = [pieces[emptyIndex], pieces[idx]];
-            emptyIndex = idx;
-            renderPuzzle();
-            if (pieces.every((v, i) => v === i)) {
-                puzzleSolved = true;
-                document.getElementById('puzzleMsg').innerHTML = '<p style="color:#FFD700; font-size:1.2rem;">🎉 Puzzle solved! 🎉</p>';
-                playGift();
-                setTimeout(() => showCake(), 1500);
-            }
-        }
-    }
-
-    // ==================== CAKE ANIMATION ====================
-    function showCake() {
-        playPop();
-        let cont = document.getElementById('dynamicContent');
-        cont.innerHTML = `<div class="page active"><div id="cakeArea" style="height:250px; position:relative;"></div><div id="cakeMsg" style="font-size:1.5rem; color:#FFD700; text-align:center;"></div></div>`;
-        let layers = 0;
-        let intv = setInterval(() => {
-            let cakeDiv = document.getElementById('cakeArea');
-            let cake = document.createElement('div');
-            cake.textContent = '🎂';
-            cake.style.position = 'absolute';
-            cake.style.left = '50%';
-            cake.style.transform = 'translateX(-50%)';
-            cake.style.fontSize = '3rem';
-            cake.style.animation = 'fallCake 1.4s forwards';
-            cakeDiv.appendChild(cake);
-            setTimeout(() => cake.remove(), 1400);
-            layers++;
-            if (layers >= 6) { clearInterval(intv); document.getElementById('cakeMsg').innerHTML = "Happy Birthday 🎂 Shwetaaaaaa Sister"; }
-        }, 800);
-    }
-
-    // Add keyframe for cake fall
-    let style = document.createElement('style');
-    style.textContent = `@keyframes fly { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(150px,-200px) scale(1.5); opacity:0; } } @keyframes burst { 0% { transform: scale(0) translate(0,0); opacity:1; } 100% { transform: scale(1.2) translate(var(--x), var(--y)); opacity:0; } } @keyframes fallCake { 0% { top: -80px; opacity:0; transform: translateX(-50%) rotate(0deg); } 100% { top: 200px; opacity:1; transform: translateX(-50%) rotate(360deg); } } .question { font-size: 1.5rem; color: #FFD700; margin: 20px 0; } .riddle-input { width: 90%; padding: 12px; font-size: 1rem; text-align: center; border-radius: 60px; border: none; margin: 15px auto; display: block; }`;
-    document.head.appendChild(style);
-</script>
+<script src="script.js"></script>
 </body>
 </html>
