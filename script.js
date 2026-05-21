@@ -231,34 +231,6 @@ function startRiddle3() {
 }
 
 // ==================== GIFT BOXES ====================
-function initBalloons() {
-    const container = document.getElementById('balloon-random-container');
-    if (!container) return;
-    container.innerHTML = '';
-    giftOpened = [];
-    globalMsgIndex = 0;
-    let foodChoice = foodAnswers[4] || 'Kitkat';
-    
-    for (let i = 0; i < totalGifts; i++) {
-        const giftDiv = document.createElement('div');
-        giftDiv.className = 'balloon-gift-item';
-        giftDiv.setAttribute('data-index', i);
-        
-        if (i === 0) giftDiv.setAttribute('data-type', 'msg1');
-        else if (i === 1) giftDiv.setAttribute('data-type', 'msg2');
-        else giftDiv.setAttribute('data-type', 'msg3');
-        
-        giftDiv.innerHTML = `<div class="balloon-icon">🎈</div><div class="gift-icon">🎁</div>`;
-        giftDiv.onclick = () => openGiftBox(i, giftDiv.getAttribute('data-type'), foodChoice);
-        container.appendChild(giftDiv);
-        
-        const randomDelay = Math.random() * 2;
-        giftDiv.style.animationDelay = randomDelay + 's';
-    }
-    document.getElementById('popped-count').innerText = '0';
-    document.getElementById('balloon-message').innerHTML = '';
-}
-
 function openGiftBox(index, type, foodChoice) {
     if (giftOpened.includes(index)) return;
     playGiftSound();
@@ -279,16 +251,13 @@ function openGiftBox(index, type, foodChoice) {
         setTimeout(() => {
             const container = document.getElementById('balloon-game-container');
             const ageMsgDiv = document.createElement('div');
-            ageMsgDiv.id = 'age-message-container';
             ageMsgDiv.style.marginTop = '20px';
             ageMsgDiv.style.padding = '20px';
             ageMsgDiv.style.background = 'rgba(255,215,0,0.2)';
             ageMsgDiv.style.borderRadius = '20px';
-            ageMsgDiv.style.animation = 'fadeInUp 0.8s ease';
             ageMsgDiv.innerHTML = `
-                <p style="font-size: 1.8rem; color: #FFD700; font-weight: bold;">You are 19 now.</p>
-                <p style="font-size: 1.5rem; color: #ff69b4; margin-top: 10px;">Damn you are so old 🤣🤣</p>
-                <button class="glow-btn" onclick="showPage(26)" style="margin-top: 20px;">Continue →</button>
+                <p style="font-size:1.3rem; color:#FFD700;">You are 19 now.</p>
+                <p style="font-size:1rem; color:#ff69b4;">Damn you are so old 🤣🤣</p>
             `;
             container.appendChild(ageMsgDiv);
         }, 500);
@@ -301,13 +270,12 @@ function openGiftBox(index, type, foodChoice) {
         clickedGift.style.pointerEvents = 'none';
     }
     
-    // AUTO ADVANCE after all 3 gifts are opened
+    // SHOW CONTINUE BUTTON after all 3 gifts are opened
     if (giftOpened.length === 3) {
-        setTimeout(() => {
-            nextPage();
-        }, 2000);
+        document.getElementById('giftContinueBtn').style.display = 'block';
     }
 }
+
 
 // ==================== 3x3 PUZZLE ====================
 const board = document.getElementById('board');
