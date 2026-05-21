@@ -5,73 +5,61 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Birthday Surprise</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="stars-container" id="starsContainer"></div>
+<div class="stars-container"></div>
 
-<div class="container" id="app">
+<div class="container">
 
 <!-- PAGE 1 -->
 <div id="page1" class="page active">
-    <h1 class="main-title">Birthday Surprise</h1>
-    <p class="subtitle">Enter your name</p>
-
-    <input id="nameInput" class="fancy-input" placeholder="Type your name">
-
-    <button class="glow-btn" onclick="validateName()">Continue</button>
+<h1>Birthday Surprise</h1>
+<input id="nameInput" placeholder="Enter name">
+<button onclick="validateName()">Continue</button>
 </div>
 
 <!-- REJECT -->
 <div id="reject1" class="page">
-    <p id="rejectNameMsg"></p>
-    <button class="glow-btn" onclick="nextReject()">Next</button>
+<p id="rejectNameMsg"></p>
+<button onclick="nextReject()">Next</button>
 </div>
 
 <div id="reject2" class="page">
-    <h2>Are you Shweta??</h2>
-    <button class="glow-btn" onclick="nextReject()">Next</button>
+<h2>Are you sure?</h2>
+<button onclick="nextReject()">Next</button>
 </div>
 
 <div id="reject3" class="page">
-    <h2>I don't think so</h2>
-    <button class="glow-btn" onclick="closeSite()">Close</button>
+<h2>Bye</h2>
+<button onclick="closeSite()">Close</button>
 </div>
 
 <!-- MAILBOX -->
 <div id="mailboxPage" class="page">
-    <div id="mailbox" onclick="openMailbox()">📬</div>
-
-    <p id="welcomeMsg"></p>
-    <button id="nextAfterMailbox" class="glow-btn hidden" onclick="nextPage()">Next</button>
+<div id="mailbox" onclick="openMailbox()">📬</div>
+<p id="welcomeMsg"></p>
+<button id="nextAfterMailbox" class="hidden" onclick="nextPage()">Next</button>
 </div>
 
 <!-- QUOTE -->
 <div id="quotePage" class="page">
-    <div class="quote-card">
-        <p>"Like stars that shine brightest in the darkest night..."</p>
-    </div>
-    <button class="glow-btn" onclick="nextPage()">Next</button>
+<div class="quote">"You shine like stars"</div>
+<button onclick="nextPage()">Next</button>
 </div>
 
 <!-- DYNAMIC -->
 <div id="dynamicContent"></div>
-
-</div>
 
 <!-- MUSIC -->
 <audio id="bgMusic" loop>
 <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8f7b6c6.mp3">
 </audio>
 
-<audio id="popSound"></audio>
-<audio id="giftSound"></audio>
-<audio id="successSound"></audio>
-
-<div class="music-control" onclick="toggleMusic()">🔊</div>
+<div onclick="toggleMusic()" class="music">🔊</div>
 
 <script src="script.js"></script>
 </body>
