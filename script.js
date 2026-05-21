@@ -300,6 +300,13 @@ function openGiftBox(index, type, foodChoice) {
         clickedGift.style.opacity = '0.5';
         clickedGift.style.pointerEvents = 'none';
     }
+    
+    // AUTO ADVANCE after all 3 gifts are opened
+    if (giftOpened.length === 3) {
+        setTimeout(() => {
+            nextPage();
+        }, 2000);
+    }
 }
 
 // ==================== 3x3 PUZZLE ====================
