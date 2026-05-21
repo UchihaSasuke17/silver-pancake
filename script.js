@@ -246,7 +246,7 @@ function openGiftBox(index, type, foodChoice) {
         msgDiv.innerHTML = `<p>🎁 I will send you 5 ${foodChoice} 🍫 for each correct question!</p>`;
         globalMsgIndex++;
     } else if (type === 'msg3' && globalMsgIndex === 2) {
-        msgDiv.innerHTML = `<p>🎁 ${riddleCorrectCount >= 2 ? "You are damn smart 🤓" : "But still, you are too slow 🐢😂"}</p>`;
+        msgDiv.innerHTML = `<p>🎁 ${riddleCorrectCount >= 2 ? "Damn You are smart 🤓" : "But still, you are too slow 🐢😂"}</p>`;
         globalMsgIndex++;
         
         setTimeout(() => {
@@ -258,7 +258,7 @@ function openGiftBox(index, type, foodChoice) {
             ageMsgDiv.style.borderRadius = '20px';
             ageMsgDiv.innerHTML = `
                 <p style="font-size:1.3rem; color:#FFD700;">You are 19 now.</p>
-                <p style="font-size:1rem; color:#ff69b4;">Damn you are so old 🤣🤣</p>
+                <p style="font-size:1rem; color:#ff69b4;">Damn you are so soo old 🤣🤣</p>
             `;
             container.appendChild(ageMsgDiv);
         }, 500);
