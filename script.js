@@ -18,12 +18,6 @@ const noContextMessages = [
     "Is it Your Birthday 🎂 today.....", "Really.....", "Sorry I didn't wish you earlier....."
 ];
 
-const giftMessages = [
-    (count) => `You have answered ${count} questions correctly.`,
-    (option) => `I will send you 5 ${option} 🍫 for each correct question.`,
-    (allCorrect) => allCorrect ? "You are damn smart 🤓" : "But still, you are too slow 🐢😂"
-];
-
 const happyBirthdayNotes = [
     523.25, 523.25, 587.33, 523.25, 698.46, 659.25,
     523.25, 523.25, 587.33, 523.25, 783.99, 698.46,
@@ -164,32 +158,25 @@ function closeSite() {
     document.body.innerHTML = '<div style="text-align:center; padding:60px; color:white;"><h1>Goodbye!</h1></div>';
 }
 
-// ==================== LOOPING QUESTION 1 ====================
+// ==================== LOOPING QUESTIONS ====================
 function startLoopingQuestion1() {
     const optionDiv = document.getElementById('looping-option-1');
     const selectBtn = document.getElementById('looping-answer-1');
-    
     if (optionDiv) {
         optionDiv.innerHTML = 'Tanu\'s Heart';
         optionDiv.onclick = () => nextPage();
     }
-    if (selectBtn) {
-        selectBtn.onclick = () => nextPage();
-    }
+    if (selectBtn) selectBtn.onclick = () => nextPage();
 }
 
-// ==================== LOOPING QUESTION 2 ====================
 function startLoopingQuestion2() {
     const optionDiv = document.getElementById('looping-option-2');
     const selectBtn = document.getElementById('looping-answer-2');
-    
     if (optionDiv) {
         optionDiv.innerHTML = 'My Brain';
         optionDiv.onclick = () => nextPage();
     }
-    if (selectBtn) {
-        selectBtn.onclick = () => nextPage();
-    }
+    if (selectBtn) selectBtn.onclick = () => nextPage();
 }
 
 // ==================== RIDDLES ====================
@@ -289,7 +276,6 @@ function openGiftBox(index, type, foodChoice) {
         msgDiv.innerHTML = `<p>🎁 ${riddleCorrectCount >= 2 ? "You are damn smart 🤓" : "But still, you are too slow 🐢😂"}</p>`;
         globalMsgIndex++;
         
-        // Add age message after all 3 messages
         setTimeout(() => {
             const container = document.getElementById('balloon-game-container');
             const ageMsgDiv = document.createElement('div');
@@ -316,7 +302,7 @@ function openGiftBox(index, type, foodChoice) {
     }
 }
 
-// ==================== YOUR 3x3 PUZZLE CODE ====================
+// ==================== 3x3 PUZZLE ====================
 const board = document.getElementById('board');
 const pool = document.getElementById('pool');
 const hintBtn = document.getElementById('hintBtn');
@@ -335,12 +321,8 @@ let puzzleTimerInterval = null;
 let gameStarted = false;
 let currentImgSrc = 'shweta.jpg';
 
-if (imageLoader) {
-    imageLoader.addEventListener('change', loadCustomImage);
-}
-if (reloadBtn) {
-    reloadBtn.addEventListener('click', () => initGame(currentImgSrc));
-}
+if (imageLoader) imageLoader.addEventListener('change', loadCustomImage);
+if (reloadBtn) reloadBtn.addEventListener('click', () => initGame(currentImgSrc));
 
 setupHintButton();
 initGame(currentImgSrc);
@@ -355,9 +337,7 @@ function loadCustomImage(e) {
 }
 
 function initGame(imgSrc) {
-    moves = 0;
-    seconds = 0;
-    gameStarted = false;
+    moves = 0; seconds = 0; gameStarted = false;
     if (moveCountLabel) moveCountLabel.textContent = moves;
     if (timerLabel) timerLabel.textContent = "00:00";
     clearInterval(puzzleTimerInterval);
@@ -370,21 +350,14 @@ function initGame(imgSrc) {
         });
     }
     if (pool) pool.innerHTML = '';
-
-    if (hintOverlay) {
-        hintOverlay.style.backgroundImage = `url(${imgSrc})`;
-    }
+    if (hintOverlay) hintOverlay.style.backgroundImage = `url(${imgSrc})`;
 
     if (board) {
         for (let i = 0; i < 9; i++) {
             const slot = document.createElement('div');
             slot.classList.add('slot');
             slot.dataset.index = i;
-            
-            slot.addEventListener('dragover', e => {
-                e.preventDefault();
-                slot.classList.add('drag-over');
-            });
+            slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('drag-over'); });
             slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
             slot.addEventListener('drop', handlePuzzleDrop);
             board.appendChild(slot);
@@ -400,25 +373,20 @@ function initGame(imgSrc) {
     for (let i = 0; i < 9; i++) {
         const row = Math.floor(i / 3);
         const col = i % 3;
-
         const piece = document.createElement('div');
         piece.classList.add('piece');
         piece.id = `piece-${i}`;
         piece.draggable = true;
         piece.dataset.index = i;
-        
         piece.style.backgroundImage = `url(${imgSrc})`;
         piece.style.backgroundSize = '300% 300%';
         piece.style.backgroundPosition = `${col * 50}% ${row * 50}%`;
-
         piece.addEventListener('dragstart', e => {
             e.dataTransfer.setData('text/plain', e.target.id);
             startPuzzleTimer();
         });
-
         pieces.push(piece);
     }
-
     pieces.sort(() => Math.random() - 0.5);
     pieces.forEach(p => pool.appendChild(p));
 }
@@ -438,12 +406,9 @@ function handlePuzzleDrop(e) {
     e.preventDefault();
     const slot = e.currentTarget;
     if (slot) slot.classList.remove('drag-over');
-
     const pieceId = e.dataTransfer.getData('text/plain');
     const piece = document.getElementById(pieceId);
-
     if (!piece) return;
-
     if (slot.classList && slot.classList.contains('slot') && slot.children.length === 0) {
         slot.appendChild(piece);
         updatePuzzleMoves();
@@ -451,7 +416,6 @@ function handlePuzzleDrop(e) {
         slot.appendChild(piece);
         updatePuzzleMoves();
     }
-
     checkPuzzleWinCondition();
 }
 
@@ -464,7 +428,6 @@ function setupHintButton() {
     if (!hintBtn || !hintOverlay) return;
     const showHint = () => hintOverlay.style.display = 'block';
     const hideHint = () => hintOverlay.style.display = 'none';
-
     hintBtn.addEventListener('mousedown', showHint);
     hintBtn.addEventListener('mouseup', hideHint);
     hintBtn.addEventListener('mouseleave', hideHint);
@@ -475,16 +438,9 @@ function setupHintButton() {
 function checkPuzzleWinCondition() {
     const slots = board.querySelectorAll('.slot');
     let accurateCount = 0;
-
     slots.forEach(slot => {
-        if (slot.children.length > 0) {
-            const embeddedPiece = slot.children[0];
-            if (slot.dataset.index === embeddedPiece.dataset.index) {
-                accurateCount++;
-            }
-        }
+        if (slot.children.length > 0 && slot.dataset.index === slot.children[0].dataset.index) accurateCount++;
     });
-
     if (accurateCount === 9) {
         clearInterval(puzzleTimerInterval);
         if (winDetails && timerLabel) winDetails.textContent = `Completed in ${moves} moves and ${timerLabel.textContent}!`;
@@ -550,6 +506,7 @@ for (let i = 4; i <= 8; i++) {
         });
     });
 }
+
 // Food Questions (pages 9-13)
 for (let i = 9; i <= 13; i++) {
     const opts = document.querySelectorAll(`#page-${i} .option`);
@@ -569,10 +526,11 @@ for (let i = 9; i <= 13; i++) {
 document.getElementById('next-14').addEventListener('click', () => showPage(15));
 document.getElementById('next-15').addEventListener('click', () => showPage(16));
 
+
 // Riddles initialization
 const page16 = document.getElementById('page-16');
 if (page16) {
-    const observer16 = new MutationObserver(function(mutations) {
+    const observer16 = new MutationObserver(function() {
         if (page16.classList.contains('active')) { startRiddle1(); observer16.disconnect(); }
     });
     observer16.observe(page16, { attributes: true });
@@ -580,7 +538,7 @@ if (page16) {
 
 const page17 = document.getElementById('page-17');
 if (page17) {
-    const observer17 = new MutationObserver(function(mutations) {
+    const observer17 = new MutationObserver(function() {
         if (page17.classList.contains('active')) { startRiddle2(); observer17.disconnect(); }
     });
     observer17.observe(page17, { attributes: true });
@@ -588,7 +546,7 @@ if (page17) {
 
 const page18 = document.getElementById('page-18');
 if (page18) {
-    const observer18 = new MutationObserver(function(mutations) {
+    const observer18 = new MutationObserver(function() {
         if (page18.classList.contains('active')) { startRiddle3(); observer18.disconnect(); }
     });
     observer18.observe(page18, { attributes: true });
