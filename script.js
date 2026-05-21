@@ -11,7 +11,7 @@ let noContextIndex = 0;
 let userName = '';
 let rejectStep = 1;
 let globalMsgIndex = 0;
-
+let riddleCorrectCount = 0;
 
 const noContextMessages = [
     "Wait a minute.....", "Did I forget something.....", "Give me a moment.....",
@@ -192,10 +192,8 @@ function startLoopingQuestion2() {
     }
 }
 
-
 // ==================== RIDDLES ====================
 let riddleTimers = { t1: null, t2: null, t3: null };
-let riddleCorrectCount = 0;
 
 function startRiddle1() {
     let pieces = 3;
@@ -246,8 +244,6 @@ function startRiddle3() {
 }
 
 // ==================== GIFT BOXES ====================
-let globalMsgIndex = 0;
-
 function initBalloons() {
     const container = document.getElementById('balloon-random-container');
     if (!container) return;
@@ -256,26 +252,14 @@ function initBalloons() {
     globalMsgIndex = 0;
     let foodChoice = foodAnswers[4] || 'Kitkat';
     
-    let msgPositions = [];
-    while (msgPositions.length < 3) {
-        let pos = Math.floor(Math.random() * 7);
-        if (!msgPositions.includes(pos)) msgPositions.push(pos);
-    }
-    msgPositions.sort((a, b) => a - b);
-    
     for (let i = 0; i < totalGifts; i++) {
         const giftDiv = document.createElement('div');
         giftDiv.className = 'balloon-gift-item';
         giftDiv.setAttribute('data-index', i);
         
-        if (msgPositions.includes(i)) {
-            let msgIdx = msgPositions.indexOf(i);
-            if (msgIdx === 0) giftDiv.setAttribute('data-type', 'msg1');
-            else if (msgIdx === 1) giftDiv.setAttribute('data-type', 'msg2');
-            else giftDiv.setAttribute('data-type', 'msg3');
-        } else {
-            giftDiv.setAttribute('data-type', 'empty');
-        }
+        if (i === 0) giftDiv.setAttribute('data-type', 'msg1');
+        else if (i === 1) giftDiv.setAttribute('data-type', 'msg2');
+        else giftDiv.setAttribute('data-type', 'msg3');
         
         giftDiv.innerHTML = `<div class="balloon-icon">🎈</div><div class="gift-icon">🎁</div>`;
         giftDiv.onclick = () => openGiftBox(i, giftDiv.getAttribute('data-type'), foodChoice);
@@ -329,18 +313,6 @@ function openGiftBox(index, type, foodChoice) {
     if (clickedGift) {
         clickedGift.style.opacity = '0.5';
         clickedGift.style.pointerEvents = 'none';
-    }
-}
-    }
-    
-    const clickedGift = document.querySelector(`.balloon-gift-item[data-index="${index}"]`);
-    if (clickedGift) {
-        clickedGift.style.opacity = '0.5';
-        clickedGift.style.pointerEvents = 'none';
-    }
-    
-    if (giftOpened.length >= 7) {
-        setTimeout(() => nextPage(), 1000);
     }
 }
 
@@ -549,7 +521,7 @@ document.getElementById('next-1').addEventListener('click', function() {
     userName = name;
     if (userName.toLowerCase() === 'shweta') {
         startHappyBirthdayMusic();
-        showPage(2);  // This should go to page 2
+        showPage(2);
     } else {
         document.getElementById('rejectNameMsg').innerHTML = `Welcome ${userName}`;
         goToReject1();
@@ -578,7 +550,6 @@ for (let i = 4; i <= 8; i++) {
         });
     });
 }
-
 // Food Questions (pages 9-13)
 for (let i = 9; i <= 13; i++) {
     const opts = document.querySelectorAll(`#page-${i} .option`);
@@ -673,4 +644,3 @@ function createStars() {
 createStars();
 
 showPage(1);
-
