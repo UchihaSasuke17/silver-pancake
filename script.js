@@ -4,14 +4,14 @@ let audioContext = null;
 let musicGain = null;
 let melodyInterval = null;
 let giftOpened = [];
-let totalGifts = 7;
+let totalGifts = 3;
 let anotherAnswers = [];
 let foodAnswers = [];
 let noContextIndex = 0;
 let userName = '';
 let rejectStep = 1;
-let loopingInterval = null;
-let currentLoopStep = 0;
+let globalMsgIndex = 0;
+
 
 const noContextMessages = [
     "Wait a minute.....", "Did I forget something.....", "Give me a moment.....",
@@ -166,61 +166,32 @@ function closeSite() {
 
 // ==================== LOOPING QUESTION 1 ====================
 function startLoopingQuestion1() {
-    currentLoopStep = 0;
-    if (loopingInterval) clearInterval(loopingInterval);
-    
-    function updateOptions() {
-        let optionText = '';
-        const repeatCount = Math.pow(2, currentLoopStep);
-        for (let i = 0; i < repeatCount; i++) {
-            optionText += 'Tanu\'s Heart ';
-        }
-        const optionDiv = document.getElementById('looping-option-1');
-        if (optionDiv) optionDiv.innerHTML = optionText.trim();
-        currentLoopStep++;
-        if (currentLoopStep > 4) currentLoopStep = 0;
-    }
-    
-    updateOptions();
-    loopingInterval = setInterval(updateOptions, 1000);
-    
+    const optionDiv = document.getElementById('looping-option-1');
     const selectBtn = document.getElementById('looping-answer-1');
+    
+    if (optionDiv) {
+        optionDiv.innerHTML = 'Tanu\'s Heart';
+        optionDiv.onclick = () => nextPage();
+    }
     if (selectBtn) {
-        selectBtn.onclick = () => {
-            clearInterval(loopingInterval);
-            nextPage();
-        };
+        selectBtn.onclick = () => nextPage();
     }
 }
 
 // ==================== LOOPING QUESTION 2 ====================
 function startLoopingQuestion2() {
-    currentLoopStep = 0;
-    if (loopingInterval) clearInterval(loopingInterval);
-    
-    function updateOptions() {
-        let optionText = '';
-        const repeatCount = Math.pow(2, currentLoopStep);
-        for (let i = 0; i < repeatCount; i++) {
-            optionText += 'My Brain ';
-        }
-        const optionDiv = document.getElementById('looping-option-2');
-        if (optionDiv) optionDiv.innerHTML = optionText.trim();
-        currentLoopStep++;
-        if (currentLoopStep > 4) currentLoopStep = 0;
-    }
-    
-    updateOptions();
-    loopingInterval = setInterval(updateOptions, 1000);
-    
+    const optionDiv = document.getElementById('looping-option-2');
     const selectBtn = document.getElementById('looping-answer-2');
+    
+    if (optionDiv) {
+        optionDiv.innerHTML = 'My Brain';
+        optionDiv.onclick = () => nextPage();
+    }
     if (selectBtn) {
-        selectBtn.onclick = () => {
-            clearInterval(loopingInterval);
-            nextPage();
-        };
+        selectBtn.onclick = () => nextPage();
     }
 }
+
 
 // ==================== RIDDLES ====================
 let riddleTimers = { t1: null, t2: null, t3: null };
@@ -324,11 +295,6 @@ function openGiftBox(index, type, foodChoice) {
     document.getElementById('popped-count').innerText = giftOpened.length;
     const msgDiv = document.getElementById('balloon-message');
     
-    if (type === 'empty') {
-        msgDiv.innerHTML = `<p>😜 Try again 😜</p>`;
-        return;
-    }
-    
     if (type === 'msg1' && globalMsgIndex === 0) {
         msgDiv.innerHTML = `<p>🎁 You have answered ${riddleCorrectCount} out of 3 riddles correctly!</p>`;
         globalMsgIndex++;
@@ -338,11 +304,33 @@ function openGiftBox(index, type, foodChoice) {
     } else if (type === 'msg3' && globalMsgIndex === 2) {
         msgDiv.innerHTML = `<p>🎁 ${riddleCorrectCount >= 2 ? "You are damn smart 🤓" : "But still, you are too slow 🐢😂"}</p>`;
         globalMsgIndex++;
-    } else {
-        msgDiv.innerHTML = `<p>😜 Try again in order! 😜</p>`;
-        giftOpened.pop();
-        document.getElementById('popped-count').innerText = giftOpened.length;
+        
+        // Add age message after all 3 messages
+        setTimeout(() => {
+            const container = document.getElementById('balloon-game-container');
+            const ageMsgDiv = document.createElement('div');
+            ageMsgDiv.id = 'age-message-container';
+            ageMsgDiv.style.marginTop = '20px';
+            ageMsgDiv.style.padding = '20px';
+            ageMsgDiv.style.background = 'rgba(255,215,0,0.2)';
+            ageMsgDiv.style.borderRadius = '20px';
+            ageMsgDiv.style.animation = 'fadeInUp 0.8s ease';
+            ageMsgDiv.innerHTML = `
+                <p style="font-size: 1.8rem; color: #FFD700; font-weight: bold;">You are 19 now.</p>
+                <p style="font-size: 1.5rem; color: #ff69b4; margin-top: 10px;">Damn you are so old 🤣🤣</p>
+                <button class="glow-btn" onclick="showPage(26)" style="margin-top: 20px;">Continue →</button>
+            `;
+            container.appendChild(ageMsgDiv);
+        }, 500);
         return;
+    }
+    
+    const clickedGift = document.querySelector(`.balloon-gift-item[data-index="${index}"]`);
+    if (clickedGift) {
+        clickedGift.style.opacity = '0.5';
+        clickedGift.style.pointerEvents = 'none';
+    }
+}
     }
     
     const clickedGift = document.querySelector(`.balloon-gift-item[data-index="${index}"]`);
