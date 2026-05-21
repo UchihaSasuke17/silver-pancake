@@ -132,11 +132,11 @@ function showPage(pageNum) {
     if (pageNum === 19) initBalloons();
     if (pageNum === 24) startLoopingQuestion1();
     if (pageNum === 25) startLoopingQuestion2();
-    if (pageNum === 26) startCakeFalling();
+    if (pageNum === 27) startCakeFalling();
 }
 
 function nextPage() {
-    if (currentPage < 26) showPage(currentPage + 1);
+    if (currentPage < 27) showPage(currentPage + 1);
 }
 
 // ==================== REJECTION FUNCTIONS ====================
