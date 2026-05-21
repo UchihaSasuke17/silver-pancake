@@ -41,7 +41,7 @@ const riddles = [
 const giftMessages = [
     (count) => `You have answered ${count} questions correctly.`,
     (option) => `I will send you 5 ${option} 🍫 for each correct question.`,
-    (allCorrect) => allCorrect ? "You are damn smart 🤓" : "But still, you are too slow 😂😂"
+    (allCorrect) => allCorrect ? "You are damn smart 🤓" : "But still, you are too slow 🐢😂"
 ];
 
 const noContextMessages = [
@@ -321,7 +321,7 @@ function showRiddle() {
 
 function handleRiddleTimeout() { 
     if (riddleTimer) clearInterval(riddleTimer); 
-    alert("You are so dumb 😂😂"); 
+    alert("You are so slow 🐢😂"); 
     currentRiddle++; 
     showRiddle(); 
 }
@@ -410,7 +410,7 @@ function showNoContext() {
     const container = document.getElementById('dynamicContent');
     container.innerHTML = `
         <div class="page active" style="display:block">
-            <div class->page-header"><span class="page-number">🤔</span></div>
+            <div class="page-header"><span class="page-number">🤔</span></div>
             <div class="no-context-card">${noContextMessages[noContextIndex]}</div>
             <button class="glow-btn" onclick="nextNoContext()">Next →</button>
         </div>
@@ -525,4 +525,4 @@ function showCakeAnimation() {
             playSuccessSound();
         }
     }, 800);
-}
+        }
