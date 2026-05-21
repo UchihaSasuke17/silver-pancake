@@ -270,11 +270,6 @@ function openGiftBox(index, type, foodChoice) {
         clickedGift.style.opacity = '0.5';
         clickedGift.style.pointerEvents = 'none';
     }
-    
-    // SHOW CONTINUE BUTTON after all 3 gifts are opened
-    if (giftOpened.length === 3) {
-        document.getElementById('giftContinueBtn').style.display = 'block';
-    }
 }
 
 
