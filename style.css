@@ -725,3 +725,25 @@ body {
     .balloon-icon { font-size: 1.8rem; }
     .gift-icon { font-size: 1.5rem; padding: 8px; }
   }
+/* Huge Gift Box Animation */
+.huge-gift-message {
+    animation: fadeInUp 1s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Bounce animation for the gift box */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
