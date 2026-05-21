@@ -254,7 +254,17 @@
     <h2 class="question-text">Pop the balloons!</h2>
     <div class="balloon-game-container">
         <div id="balloon-message" class="balloon-message"></div>
-        <div class="balloon-random-container" id="balloon-random-container"></div>
+        <div class="balloon-random-container" id="balloon-random-container">
+    <div class="balloon-gift-item" data-index="0" onclick="openGiftBox(0, 'msg1', '')">
+        🎈 🎁
+    </div>
+    <div class="balloon-gift-item" data-index="1" onclick="openGiftBox(1, 'msg2', 'Kitkat')">
+        🎈 🎁
+    </div>
+    <div class="balloon-gift-item" data-index="2" onclick="openGiftBox(2, 'msg3', '')">
+        🎈 🎁
+    </div>
+        </div>
         <div class="balloon-progress"><span id="popped-count">0</span>/3 gifts opened</div>
     </div>
     <button id="giftContinueBtn" class="glow-btn" style="display: none; margin-top: 20px;" onclick="nextPage()">Continue →</button>
