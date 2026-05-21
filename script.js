@@ -1,3 +1,4 @@
+
 let currentPage = 1;
 let musicStarted = false;
 let audioContext = null;
@@ -130,7 +131,7 @@ function showPage(pageNum) {
     if (targetPage) targetPage.classList.add('active');
     currentPage = pageNum;
     if (pageNum === 19) initBalloons();
-    if (pageNum === 22) initPuzzlePage();
+    if (pageNum === 22) initGame('shweta.jpg');
     if (pageNum === 23) startLoopingQuestion1();
     if (pageNum === 24) startLoopingQuestion2();
     if (pageNum === 25) startCakeFalling();
@@ -138,6 +139,32 @@ function showPage(pageNum) {
 
 function nextPage() {
     if (currentPage < 25) showPage(currentPage + 1);
+}
+
+// ==================== REJECTION FUNCTIONS ====================
+function goToReject1() {
+    document.getElementById('page-1').classList.remove('active');
+    document.getElementById('reject1').classList.add('active');
+    currentPage = 'reject1';
+}
+
+function nextReject() {
+    rejectStep++;
+    if (rejectStep === 2) {
+        document.getElementById('reject1').classList.remove('active');
+        document.getElementById('reject2').classList.add('active');
+        currentPage = 'reject2';
+    } else if (rejectStep === 3) {
+        document.getElementById('reject2').classList.remove('active');
+        document.getElementById('reject3').classList.add('active');
+        currentPage = 'reject3';
+    } else if (rejectStep === 4) {
+        closeSite();
+    }
+}
+
+function closeSite() {
+    document.body.innerHTML = '<div style="text-align:center; padding:60px; color:white;"><h1>Goodbye!</h1></div>';
 }
 
 // ==================== LOOPING QUESTION 1 ====================
@@ -281,122 +308,163 @@ function openGiftBox(index, foodChoice) {
     if (giftOpened.length >= 3) setTimeout(() => nextPage(), 1000);
 }
 
-// ==================== 3x3 PUZZLE ====================
-function initPuzzlePage() {
-    const board = document.getElementById('board');
-    const pool = document.getElementById('pool');
-    const hintBtn = document.getElementById('hintBtn');
-    const hintOverlay = document.getElementById('hint-overlay');
-    const moveCountLabel = document.getElementById('moveCount');
-    const timerLabel = document.getElementById('timer');
-    const winModal = document.getElementById('win-modal');
-    const mask = document.getElementById('mask');
-    const winDetails = document.getElementById('win-details');
-    const reloadBtn = document.getElementById('reloadBtn');
-    const continueBtn = document.getElementById('continuePuzzleBtn');
+// ==================== PUZZLE CODE ====================
+const board = document.getElementById('board');
+const pool = document.getElementById('pool');
+const hintBtn = document.getElementById('hintBtn');
+const hintOverlay = document.getElementById('hint-overlay');
+const moveCountLabel = document.getElementById('moveCount');
+const timerLabel = document.getElementById('timer');
+const winModal = document.getElementById('win-modal');
+const mask = document.getElementById('mask');
+const winDetails = document.getElementById('win-details');
+const reloadBtn = document.getElementById('reloadBtn');
 
-    let moves = 0;
-    let seconds = 0;
-    let gameStarted = false;
-    let timerInterval = null;
-    const currentImgSrc = 'shweta.jpg';
+let moves = 0;
+let seconds = 0;
+let puzzleTimerInterval = null;
+let gameStarted = false;
 
+const currentImgSrc = 'shweta.jpg';
+
+function initGame(imgSrc) {
+    moves = 0;
+    seconds = 0;
+    gameStarted = false;
     if (moveCountLabel) moveCountLabel.textContent = moves;
     if (timerLabel) timerLabel.textContent = "00:00";
-    if (timerInterval) clearInterval(timerInterval);
+    clearInterval(puzzleTimerInterval);
     if (winModal) winModal.style.display = 'none';
     if (mask) mask.style.display = 'none';
 
     if (board) {
-        Array.from(board.children).forEach(child => { if (child !== hintOverlay) child.remove(); });
+        Array.from(board.children).forEach(child => {
+            if(child !== hintOverlay) child.remove();
+        });
     }
     if (pool) pool.innerHTML = '';
-    if (hintOverlay) hintOverlay.style.backgroundImage = `url(${currentImgSrc})`;
 
-    for (let i = 0; i < 9; i++) {
-        const slot = document.createElement('div');
-        slot.classList.add('slot');
-        slot.dataset.index = i;
-        slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('drag-over'); });
-        slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
-        slot.addEventListener('drop', (e) => handleDrop(e, board, pool, updateMoves, checkWin));
-        if (board) board.appendChild(slot);
+    if (hintOverlay) {
+        hintOverlay.style.backgroundImage = `url(${imgSrc})`;
+        hintOverlay.style.backgroundSize = '100% 100%';
     }
+
+    if (board) {
+        for (let i = 0; i < 9; i++) {
+            const slot = document.createElement('div');
+            slot.classList.add('slot');
+            slot.dataset.index = i;
+            
+            slot.addEventListener('dragover', e => {
+                e.preventDefault();
+                slot.classList.add('drag-over');
+            });
+            slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+            slot.addEventListener('drop', handlePuzzleDrop);
+            board.appendChild(slot);
+        }
+    }
+
     if (pool) {
         pool.addEventListener('dragover', e => e.preventDefault());
-        pool.addEventListener('drop', (e) => handleDrop(e, board, pool, updateMoves, checkWin));
+        pool.addEventListener('drop', handlePuzzleDrop);
     }
 
     let pieces = [];
     for (let i = 0; i < 9; i++) {
         const row = Math.floor(i / 3);
         const col = i % 3;
+
         const piece = document.createElement('div');
         piece.classList.add('piece');
         piece.id = `piece-${i}`;
         piece.draggable = true;
         piece.dataset.index = i;
-        piece.style.backgroundImage = `url(${currentImgSrc})`;
-        piece.style.backgroundSize = '300px 300px';
-        piece.style.backgroundPosition = `-${col * 100}px -${row * 100}px`;
+        
+        piece.style.backgroundImage = `url(${imgSrc})`;
+        piece.style.backgroundSize = '300% 300%';
+        piece.style.backgroundPosition = `${col * 50}% ${row * 50}%`;
+
         piece.addEventListener('dragstart', e => {
             e.dataTransfer.setData('text/plain', e.target.id);
-            if (!gameStarted) startTimerPuzzle();
-            gameStarted = true;
+            startPuzzleTimer();
         });
+
         pieces.push(piece);
     }
+
     pieces.sort(() => Math.random() - 0.5);
     pieces.forEach(p => pool.appendChild(p));
-
-    function updateMoves() { moves++; if (moveCountLabel) moveCountLabel.textContent = moves; }
-    function startTimerPuzzle() {
-        if (gameStarted) return;
-        gameStarted = true;
-        timerInterval = setInterval(() => {
-            seconds++;
-            const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-            const secs = String(seconds % 60).padStart(2, '0');
-            if (timerLabel) timerLabel.textContent = `${mins}:${secs}`;
-        }, 1000);
-    }
-    function checkWin() {
-        const slots = board.querySelectorAll('.slot');
-        let accurateCount = 0;
-        slots.forEach(slot => {
-            if (slot.children.length > 0 && slot.dataset.index === slot.children[0].dataset.index) accurateCount++;
-        });
-        if (accurateCount === 9) {
-            if (timerInterval) clearInterval(timerInterval);
-            if (winDetails) winDetails.textContent = `Completed in ${moves} moves and ${timerLabel.textContent}!`;
-            if (winModal) winModal.style.display = 'block';
-            if (mask) mask.style.display = 'block';
-        }
-    }
-    if (hintBtn) {
-        hintBtn.onmousedown = () => { if (hintOverlay) hintOverlay.style.display = 'block'; };
-        hintBtn.onmouseup = () => { if (hintOverlay) hintOverlay.style.display = 'none'; };
-        hintBtn.onmouseleave = () => { if (hintOverlay) hintOverlay.style.display = 'none'; };
-    }
-    if (reloadBtn) reloadBtn.onclick = () => initPuzzlePage();
-    if (continueBtn) continueBtn.onclick = () => { nextPage(); };
 }
 
-function handleDrop(e, board, pool, updateMoves, checkWin) {
+function startPuzzleTimer() {
+    if (gameStarted || !timerLabel) return;
+    gameStarted = true;
+    puzzleTimerInterval = setInterval(() => {
+        seconds++;
+        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const secs = String(seconds % 60).padStart(2, '0');
+        if (timerLabel) timerLabel.textContent = `${mins}:${secs}`;
+    }, 1000);
+}
+
+function handlePuzzleDrop(e) {
     e.preventDefault();
     const slot = e.currentTarget;
     if (slot) slot.classList.remove('drag-over');
+
     const pieceId = e.dataTransfer.getData('text/plain');
     const piece = document.getElementById(pieceId);
+
     if (!piece) return;
+
     if (slot.classList && slot.classList.contains('slot') && slot.children.length === 0) {
         slot.appendChild(piece);
-        updateMoves();
+        updatePuzzleMoves();
     } else if (slot.id === 'pool') {
         slot.appendChild(piece);
-        updateMoves();
+        updatePuzzleMoves();
     }
-    checkWin();
+
+    checkPuzzleWinCondition();
+}
+
+function updatePuzzleMoves() {
+    moves++;
+    if (moveCountLabel) moveCountLabel.textContent = moves;
+}
+
+function setupHintButton() {
+    if (!hintBtn || !hintOverlay) return;
+    const showHint = () => hintOverlay.style.display = 'block';
+    const hideHint = () => hintOverlay.style.display = 'none';
+
+    hintBtn.addEventListener('mousedown', showHint);
+    hintBtn.addEventListener('mouseup', hideHint);
+    hintBtn.addEventListener('mouseleave', hideHint);
+    hintBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showHint(); });
+    hintBtn.addEventListener('touchend', hideHint);
+}
+
+function checkPuzzleWinCondition() {
+    const slots = board.querySelectorAll('.slot');
+    let accurateCount = 0;
+
+    slots.forEach(slot => {
+        if (slot.children.length > 0) {
+            const embeddedPiece = slot.children[0];
+            if (slot.dataset.index === embeddedPiece.dataset.index) {
+                accurateCount++;
+            }
+        }
+    });
+
+    if (accurateCount === 9) {
+        clearInterval(puzzleTimerInterval);
+        if (winDetails && timerLabel) winDetails.textContent = `Completed in ${moves} moves and ${timerLabel.textContent}!`;
+        if (winModal) winModal.style.display = 'block';
+        if (mask) mask.style.display = 'block';
+    }
 }
 
 // ==================== CAKE ANIMATION ====================
@@ -430,10 +498,14 @@ document.getElementById('next-1').addEventListener('click', function() {
         showPage(2);
     } else {
         document.getElementById('rejectNameMsg').innerHTML = `Welcome ${userName}`;
-        document.getElementById('page-1').classList.remove('active');
-        document.getElementById('reject1').classList.add('active');
+        goToReject1();
     }
 });
+
+// Rejection page next buttons
+document.getElementById('next-reject1').addEventListener('click', nextReject);
+document.getElementById('next-reject2').addEventListener('click', nextReject);
+document.getElementById('closeSiteBtn').addEventListener('click', closeSite);
 
 document.getElementById('next-2').addEventListener('click', function() {
     const year = document.getElementById('year-input').value;
@@ -511,6 +583,23 @@ document.getElementById('nextNoContext').addEventListener('click', function() {
     }
 });
 
+// Setup hint button for puzzle
+setupHintButton();
+
+// Continue button for puzzle
+const continuePuzzleBtn = document.getElementById('continuePuzzleBtn');
+if (continuePuzzleBtn) {
+    continuePuzzleBtn.addEventListener('click', () => {
+        nextPage();
+    });
+}
+
+// Reload button for puzzle
+if (reloadBtn) reloadBtn.addEventListener('click', () => initGame(currentImgSrc));
+
+// Initialize puzzle
+initGame(currentImgSrc);
+
 // Stars
 function createStars() {
     const container = document.getElementById('starsContainer');
@@ -531,5 +620,5 @@ function createStars() {
 }
 createStars();
 
+// Initialize page 1
 showPage(1);
-
