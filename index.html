@@ -1,65 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Birthday Surprise</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Birthday Surprise</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+<div class="stars-container" id="starsContainer"></div>
+<div class="container" id="app">
+    <!-- PAGE 1: NAME INPUT -->
+    <div id="page1" class="page active">
+        <div class="page-header"><span class="page-number">✨</span></div>
+        <div class="page-content">
+            <h1 class="main-title">Birthday Surprise</h1>
+            <p class="subtitle">Enter your name</p>
+            <div class="input-group">
+                <input type="text" id="nameInput" class="fancy-input" placeholder="Type your name..." autocomplete="off">
+                <button class="glow-btn" onclick="validateName()">Continue →</button>
+            </div>
+        </div>
+        <div class="page-footer">
+            <div class="progress-dots">
+                <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </div>
+        </div>
+    </div>
 
-<div class="stars-container"></div>
+    <!-- REJECTION PAGE 1 -->
+    <div id="reject1" class="page">
+        <div class="page-header"><span class="page-number">✨</span></div>
+        <div class="page-content">
+            <div class="mailbox-animation" id="rejectMailbox">📬</div>
+            <p id="rejectNameMsg" class="welcome-name"></p>
+            <button class="glow-btn" onclick="nextReject()">Next →</button>
+        </div>
+        <div class="page-footer"><div class="progress-dots"><span class="dot"></span><span class="dot active"></span><span class="dot"></span></div></div>
+    </div>
 
-<div class="container">
+    <!-- REJECTION PAGE 2 -->
+    <div id="reject2" class="page">
+        <div class="page-header"><span class="page-number">🤔</span></div>
+        <div class="page-content">
+            <h2 class="question-text">Are you Shweta?? Is it Your Birthday Today??</h2>
+            <button class="glow-btn" onclick="nextReject()">Next →</button>
+        </div>
+        <div class="page-footer"><div class="progress-dots"><span class="dot"></span><span class="dot"></span><span class="dot active"></span></div></div>
+    </div>
 
-<!-- PAGE 1 -->
-<div id="page1" class="page active">
-<h1>Birthday Surprise</h1>
-<input id="nameInput" placeholder="Enter name">
-<button onclick="validateName()">Continue</button>
+    <!-- REJECTION PAGE 3 -->
+    <div id="reject3" class="page">
+        <div class="page-header"><span class="page-number">💔</span></div>
+        <div class="page-content">
+            <h2 class="question-text">I don't think so</h2>
+            <button class="glow-btn" onclick="closeSite()">Close</button>
+        </div>
+        <div class="page-footer"><div class="progress-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+    </div>
+
+    <!-- PAGE 2: MAILBOX -->
+    <div id="mailboxPage" class="page">
+        <div class="page-header"><span class="page-number">🎁</span></div>
+        <div class="page-content">
+            <div class="mailbox-3d" id="mailbox" onclick="openMailbox()"><div class="mailbox-front">📬</div></div>
+            <div id="letterContainer" class="letter-container"></div>
+            <div id="petalContainer" class="petal-container"></div>
+            <p id="welcomeMsg" class="welcome-name hidden"></p>
+            <button class="glow-btn hidden" id="nextAfterMailbox" onclick="nextPage()">Next →</button>
+        </div>
+        <div class="page-footer"><div class="progress-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+    </div>
+
+    <!-- PAGE 3: QUOTE -->
+    <div id="quotePage" class="page">
+        <div class="page-header"><span class="page-number">💫</span></div>
+        <div class="page-content">
+            <!-- FIXED: Added onclick to make quote clickable -->
+            <div class="quote-card" onclick="nextPage()">
+                <p class="beautiful-quote">"Like stars that shine brightest in the darkest night, you have your own ways to make things beautiful."</p>
+            </div>
+            <button class="glow-btn" onclick="nextPage()">Next →</button>
+        </div>
+        <div class="page-footer"><div class="progress-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+    </div>
+
+    <!-- DYNAMIC CONTENT -->
+    <div id="dynamicContent"></div>
 </div>
 
-<!-- REJECT -->
-<div id="reject1" class="page">
-<p id="rejectNameMsg"></p>
-<button onclick="nextReject()">Next</button>
-</div>
+<!-- MUSIC CONTROL -->
+<div class="music-control" id="musicControl" onclick="toggleMusic()"><span class="music-icon">🔊</span></div>
 
-<div id="reject2" class="page">
-<h2>Are you sure?</h2>
-<button onclick="nextReject()">Next</button>
-</div>
-
-<div id="reject3" class="page">
-<h2>Bye</h2>
-<button onclick="closeSite()">Close</button>
-</div>
-
-<!-- MAILBOX -->
-<div id="mailboxPage" class="page">
-<div id="mailbox" onclick="openMailbox()">📬</div>
-<p id="welcomeMsg"></p>
-<button id="nextAfterMailbox" class="hidden" onclick="nextPage()">Next</button>
-</div>
-
-<!-- QUOTE -->
-<div id="quotePage" class="page">
-<div class="quote">"You shine like stars"</div>
-<button onclick="nextPage()">Next</button>
-</div>
-
-<!-- DYNAMIC -->
-<div id="dynamicContent"></div>
-
-<!-- MUSIC -->
-<audio id="bgMusic" loop>
-<source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8f7b6c6.mp3">
-</audio>
-
-<div onclick="toggleMusic()" class="music">🔊</div>
+<!-- AUDIO ELEMENTS -->
+<audio id="bgMusic" loop preload="auto"><source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8f7b6c6.mp3?filename=happy-birthday-8bit-108744.mp3" type="audio/mpeg"></audio>
+<audio id="popSound" preload="auto"><source src="https://www.soundjay.com/misc/sounds/pop-39248.mp3" type="audio/mpeg"></audio>
+<audio id="giftSound" preload="auto"><source src="https://www.soundjay.com/misc/sounds/gift-opening-29572.mp3" type="audio/mpeg"></audio>
+<audio id="successSound" preload="auto"><source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg"></audio>
 
 <script src="script.js"></script>
 </body>
