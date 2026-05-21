@@ -235,6 +235,7 @@ function openGiftBox(index, type, foodChoice) {
     if (giftOpened.includes(index)) return;
     playGiftSound();
     giftOpened.push(index);
+    console.log("Gifts opened:", giftOpened.length);
     document.getElementById('popped-count').innerText = giftOpened.length;
     const msgDiv = document.getElementById('balloon-message');
     
