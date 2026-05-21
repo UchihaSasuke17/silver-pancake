@@ -746,4 +746,19 @@ body {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-15px); }
 }
+/* Age Message Animation */
+#age-message-container {
+    animation: fadeInUp 0.8s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
