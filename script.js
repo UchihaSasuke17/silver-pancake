@@ -549,7 +549,7 @@ document.getElementById('next-1').addEventListener('click', function() {
     userName = name;
     if (userName.toLowerCase() === 'shweta') {
         startHappyBirthdayMusic();
-        showPage(2);
+        showPage(2);  // This should go to page 2
     } else {
         document.getElementById('rejectNameMsg').innerHTML = `Welcome ${userName}`;
         goToReject1();
